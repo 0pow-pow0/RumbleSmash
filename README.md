@@ -1,2 +1,2 @@
 # Rumble Smash
-![]("Banner.jpg")
+![Banner]("/Banner.jpg")
