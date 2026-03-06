@@ -301,7 +301,7 @@ MonoBehaviour:
     enableIcons: 1
     clickToToggleComponent: 1
     showMissingScriptWarning: 1
-    showAll: 3
+    showAll: 1
     stackDuplicateIcons: 0
     unityGroups:
     - name: Animation
@@ -2321,7 +2321,7 @@ MonoBehaviour:
           m_Tooltip: Transform
           m_TextWithWhitespace: "Transform\u200B"
         shown: 0
-        excluded: 0
+        excluded: 1
         isBuiltIn: 1
         script: {fileID: 0}
         hasToggle: 0
@@ -4324,6 +4324,57 @@ MonoBehaviour:
         excluded: 0
         isBuiltIn: 0
         script: {fileID: 11500000, guid: 398fbd556aa12944897921de52f87dc3, type: 3}
+        hasToggle: 1
+      - displayName: Player
+        name: Player, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: Player
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: Player
+          m_TextWithWhitespace: "Player\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: d038e5bdea57f5544b91d502d76336d7, type: 3}
+        hasToggle: 1
+      - displayName: Graph
+        name: FastScriptReload.Examples.Graph, Assembly-CSharp-firstpass, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: Graph
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: Graph
+          m_TextWithWhitespace: "Graph\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 0fbf89b434c2d488d9a0a8cb5a6b00b8, type: 3}
+        hasToggle: 1
+      - displayName: UnityMainThreadDispatcher
+        name: ImmersiveVRTools.Runtime.Common.UnityMainThreadDispatcher, ImmersiveVRTools.Common.Runtime,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        content:
+          m_Text: UnityMainThreadDispatcher
+          m_Image: {fileID: 1958022779231644424, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: UnityMainThreadDispatcher
+          m_TextWithWhitespace: "UnityMainThreadDispatcher\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: -1842700439, guid: 42c3f40ad0520e442aa80842ab9748a9, type: 3}
+        hasToggle: 1
+      - displayName: PlayerGroundCheck
+        name: PlayerGroundCheck, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+          PublicKeyToken=null
+        content:
+          m_Text: PlayerGroundCheck
+          m_Image: {fileID: -8204150473280056172, guid: 0000000000000000d000000000000000, type: 0}
+          m_Tooltip: PlayerGroundCheck
+          m_TextWithWhitespace: "PlayerGroundCheck\u200B"
+        shown: 0
+        excluded: 0
+        isBuiltIn: 0
+        script: {fileID: 11500000, guid: 9c5f159021ba8fe409e4003dab050db1, type: 3}
         hasToggle: 1
     unityVersion: 6000.0.49f1
     unityCount: 307
