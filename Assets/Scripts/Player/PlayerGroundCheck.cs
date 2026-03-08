@@ -13,15 +13,13 @@ public class PlayerGroundCheck : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
-        {
+        if(other.gameObject.layer == LayerMask.NameToLayer("LevelCollider")
+            &&
             // ? --- Resetta solo non stiamo saltando
-            if(plr.rb.linearVelocity.y <= 0)
-            {
-                plr.isOnGround = true;
-                plr.ResetJumpConditions();
-            } 
-
+            plr.rb.linearVelocity.y <= 0)
+        {
+            plr.isOnGround = true;
+            plr.GetComponent<PlayerJump>().ResetJumpConditions();
         }
         else
         {

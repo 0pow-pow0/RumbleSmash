@@ -1,8 +1,10 @@
 using System;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using EditorAttributes;
+using Unity.VisualScripting;
+
 
 public class Player : MonoBehaviour
 {
@@ -14,36 +16,51 @@ public class Player : MonoBehaviour
 
     // ! --------------------------------------------
     [Header("Gameplay Stats")]
-    [SerializeField] public float SPEED = 10f;
-
-    // ? --- Gestione del doppioScatto
-    [SerializeField] public float JUMP_FORCE = 0.5f;
-    [SerializeField] public float DOPPIOSCATTO_FORCE = 0.5f;
-    
-    public bool isOnGround;
-    public bool firstJumpPerformed;
-    public bool doppioScattoPerformed;
+    [SerializeField] public float SPEED;
+    [SerializeField] public float FALL_SPEED;
+    [SerializeField] public float FALL_SPEED_ON_INPUT;
+    [SerializeField, ReadOnly] public bool isOnGround;
+    [SerializeField, ReadOnly] private bool canMove = true;
 
 
 
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    UnityEvent OnPlayerMove;
+    public UnityEvent OnPlayerMove;
 
 
-    InputAction moveInput;
-    InputAction jumpInput;
+    public InputAction moveInput { get; private set; }
+    public InputAction jumpInput { get; private set; }
     
 
+
+
     // -------------------------------------------
-    // Input Related
+    // Gameplay Logic
     // -------------------------------------------
+    private float lastMovInputValueX = 0f;
+    private float lastMovInputValueY = 0f;
     void MovementLogic()
     {
         Vector2 movementInputValue = 
             moveInput.ReadValue<Vector2>();
+        
+        if(!canMove)
+            return;
 
+        if(movementInputValue == Vector2.zero)
+        {
+            // ? --- Resetta asse X, l'unica che ci interessa
+            // ? --- Visto che la Y la gestira' il rigidbody per cazzi suoi
+            rb.linearVelocity = new Vector2
+            (
+                0f,
+                rb.linearVelocity.y
+            );
+
+            return;
+        }
 
         // ? --- Evita che premendo il tasto W si voli
         if(movementInputValue.y > 0f)
@@ -54,53 +71,62 @@ public class Player : MonoBehaviour
             );              
         }
 
-        rb.AddForce(movementInputValue * SPEED, ForceMode2D.Impulse);
+        // ? --- Stiamo premendo S oppure stiamo puntando verso il basso
+        if(movementInputValue.y < 0f)
+        {
+            rb.gravityScale = FALL_SPEED_ON_INPUT;
+        }
+        // ? --- Se smettiamo di premerlo
+        else
+        {
+            rb.gravityScale = FALL_SPEED;
+        }
+
+        //rb.AddForce(movementInputValue * SPEED, ForceMode2D.Impulse);
+
+        Vector2 position2D = transform.position;
+        // TODO --- Va messo in FIXED
+        rb.linearVelocity = new Vector2
+            (
+                SPEED * movementInputValue.x,
+                rb.linearVelocity.y
+            );
+
+            
+
+
+        OnPlayerMove.Invoke();
         Debug.Log(movementInputValue);
     }
     
-
-    
-    void DoppioScattoLogic()
+    /// <summary>
+    /// Ferma tutta la logica del movimento, resettando le variabili
+    /// che lo necessitano
+    /// </summary>
+    public void DisableMovement()
     {
-        if(jumpInput.WasPerformedThisFrame())
-        {
-            Debug.Log("InputArrivato");
-            Vector2 moveInputValue = 
-                moveInput.ReadValue<Vector2>();
-
-            // ? --- Primo Salto
-            if(!firstJumpPerformed)
-            {
-                Debug.Log("PrimoSalto");
-                firstJumpPerformed = true;
-                
-                // ? --- Rimuovi momentum dovuta gravità
-                rb.linearVelocity = new Vector2
-                (
-                    rb.linearVelocity.x,
-                    0f
-                );
-
-                // ? --- Direzione del salto = Su
-                rb.AddForce(Vector2.up * JUMP_FORCE, ForceMode2D.Impulse);
-            }
-
-            // ? --- DoppioScatto
-            else if(!doppioScattoPerformed)
-            {
-                doppioScattoPerformed = true;
-                
-                // ? --- Visto che possiamo saltare in tutte
-                // ? --- le direzioni, resettiamo totalmente
-                rb.linearVelocity = Vector2.zero;
-
-                
-
-                rb.AddForce(moveInputValue * DOPPIOSCATTO_FORCE, 
-                    ForceMode2D.Impulse);
-            }
-        }
+        canMove = false;
+        rb.gravityScale = FALL_SPEED;
     }
+
+    public void EnableMovement()
+    {
+        canMove = true;
+    }
+
+    void MovementLogicTest()
+    {
+        Vector2 movementInputValue = 
+            moveInput.ReadValue<Vector2>();
+        
+        rb.position= new Vector2
+        (
+            rb.position.x + SPEED * movementInputValue.x,
+            rb.position.y + SPEED * movementInputValue.y
+        );
+    }
+    
+    
 
     /// <summary>
     /// Describes the movement of the feedback arrow
@@ -113,43 +139,37 @@ public class Player : MonoBehaviour
 
         if(movementInputValue != Vector2.zero)
         {
-
-            Quaternion rot = Quaternion.LookRotation(movementInputValue);
-            arrowRotationPivot.transform.localRotation = rot; 
+            //arrowRotationPivot.transform.LookAt(movementInputValue); 
+            float angle = Vector2.SignedAngle(new Vector2(1f,0), movementInputValue);
+            Debug.Log("Angle: " + angle); 
+            arrowRotationPivot.transform.localRotation = 
+            Quaternion.Euler(0f, 0f, angle);
         }
     }
 
-
-    // -------------------------------------------
-    // ! Physics
-    // -------------------------------------------
-    public void ResetJumpConditions()
-    {
-        firstJumpPerformed = false;
-        doppioScattoPerformed = false;
-    }
 
 
 
     void Awake()
     {
-        
+        OnPlayerMove = new UnityEvent();
+        canMove = true;
     } 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         moveInput = InputSystem.actions.FindAction("Move");
         jumpInput = InputSystem.actions.FindAction("Jump");
+
+        rb.gravityScale = FALL_SPEED;
     }
 
 
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         MovementLogic();
-
-        DoppioScattoLogic();
-
+        FeedBackArrowMovement();
     }
 }

@@ -16,12 +16,12 @@
                 },
                 {
                     "name": "Jump",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "eff3d880-dac2-4395-b33b-61b677c965ba",
-                    "expectedControlType": "",
+                    "expectedControlType": "Analog",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
