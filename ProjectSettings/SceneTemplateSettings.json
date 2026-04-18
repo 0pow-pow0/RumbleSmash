@@ -110,6 +110,11 @@
             "userAdded": false,
             "type": "UnityEngine.Timeline.TimelineAsset",
             "defaultInstantiationMode": 0
+        },
+        {
+            "userAdded": true,
+            "type": "GameManager",
+            "defaultInstantiationMode": 0
         }
     ],
     "defaultDependencyTypeInfo": {

@@ -17,7 +17,7 @@ public class PlayerCamera : MonoBehaviour
         transform.position = new Vector3
         (
             plr.transform.position.x, 
-            plr.transform.position.y , 
+            transform.position.y, 
             transform.position.z 
         );
     }

@@ -54,13 +54,19 @@ public class PlayerJump : MonoBehaviour
     // ? --- Potrei anche fare dei metodi che si richiamano fino a che
     // ? --- non si termina uno dei due salti
 
-
+    public void OnMove()
+    {
+        Debug.Log("PlayerJump: OnMove");
+    }
 
     void InputLogic()
     {
+        if(!plr.plrInp.inputIsActive)
+            return;
+
         if(plr.jumpInput.WasPerformedThisFrame())
         {
-            Debug.Log("InputArrivato");
+            //Debug.Log("InputArrivato");
             Vector2 moveInputValue = 
                 plr.moveInput.ReadValue<Vector2>();
 
@@ -129,7 +135,7 @@ public class PlayerJump : MonoBehaviour
                 0f
             );
         }
-    }
+    } 
 
     /// <summary>
     /// ? Controlla che tutte le condizioni siano vere
@@ -152,8 +158,8 @@ public class PlayerJump : MonoBehaviour
                 plr.rb.linearVelocity.magnitude * Time.deltaTime;        
             
             
-            Debug.Log("Speed: " + plr.rb.linearVelocity 
-                + " " + distanceTravelledDoppioScatto);
+            //Debug.Log("Speed: " + plr.rb.linearVelocity 
+                //+ " " + distanceTravelledDoppioScatto);
 
 
             if(
@@ -192,7 +198,9 @@ public class PlayerJump : MonoBehaviour
 
     void Update()
     {
-        InputLogic();
+        //if(plr.plrInp.inputIsActive)
+            InputLogic();
+        
         FirstJumpLogic();
         DoppioScattoLogic();
     }

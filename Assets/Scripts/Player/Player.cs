@@ -3,49 +3,74 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using EditorAttributes;
-using Unity.VisualScripting;
-
+using EditorAttributes.Editor;
 
 public class Player : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] public Rigidbody2D rb;
-    [SerializeField] public GameObject arrowRotationPivot;
-
+    [field: SerializeField] 
+    public Rigidbody2D rb { get; private set; }
+    [field: SerializeField] 
+    public GameObject arrowRotationPivot { get; private set; }
+    [field: SerializeField] 
+    public PlayerBallCollider ballCollider { get; private set; }
+    [field: SerializeField] 
+    public PlayerInput plrInp { get; private set; }
 
 
     // ! --------------------------------------------
+    #region GameplayStats
     [Header("Gameplay Stats")]
     [SerializeField] public float SPEED;
     [SerializeField] public float FALL_SPEED;
     [SerializeField] public float FALL_SPEED_ON_INPUT;
-    [SerializeField, ReadOnly] public bool isOnGround;
-    [SerializeField, ReadOnly] private bool canMove = true;
 
+    [FoldoutGroup("Flags", nameof(isOnGround), nameof(canMove))]
+    [SerializeField] private EditorAttributes.Void flagsHolder;
+    [SerializeField, HideProperty, ReadOnly] public bool isOnGround;
+    [SerializeField, HideProperty, ReadOnly] private bool canMove = true;
+    #endregion
+
+
+    // -------------------------------------------
+    // ! Physics
+    // -------------------------------------------
+    [FoldoutGroup("Physics", nameof(directionLastInput))]
+    [SerializeField] private EditorAttributes.Void physicsHolder;
+
+
+    // ? --- Servira' per sapere la direzione verso cui
+    // ? --- imprimere la forza alla palla.
+    // ? --- Questa variabile sara' un contenitore dell'ultimo input,
+    // ? --- non sara' mai zero, potra' essere usato per sapere dove sta
+    // ? --- puntando il giocatore.
+    [SerializeField, HideProperty, ReadOnly] public Vector2 directionLastInput;
+    //[NonSerialized] public Vector2 directionFacing;
 
 
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    public UnityEvent OnPlayerMove;
+    [NonSerialized] public UnityEvent OnPlayerMove;
 
 
     public InputAction moveInput { get; private set; }
     public InputAction jumpInput { get; private set; }
-    
 
 
 
     // -------------------------------------------
-    // Gameplay Logic
+    // ! Gameplay Logic
     // -------------------------------------------
-    private float lastMovInputValueX = 0f;
-    private float lastMovInputValueY = 0f;
-    void MovementLogic()
-    {
+    //TODO: Si potrebbe linkare al playerInput, ma
+    // bisogna modificarlo
+    void    MovementLogic()
+    { 
         Vector2 movementInputValue = 
-            moveInput.ReadValue<Vector2>();
-        
+            plrInp.actions.
+                FindAction("Move").ReadValue<Vector2>();
+            //moveInput.ReadValue<Vector2>();
+        Debug.Log("ASD: " + moveInput.ReadValue<Vector2>());
         if(!canMove)
             return;
 
@@ -59,8 +84,11 @@ public class Player : MonoBehaviour
                 rb.linearVelocity.y
             );
 
-            return;
+            // ? --- WHY: serve arrivarea agli altri check
+            //return;
         }
+
+        
 
         // ? --- Evita che premendo il tasto W si voli
         if(movementInputValue.y > 0f)
@@ -84,19 +112,16 @@ public class Player : MonoBehaviour
 
         //rb.AddForce(movementInputValue * SPEED, ForceMode2D.Impulse);
 
-        Vector2 position2D = transform.position;
+        Debug.Log("M: " + movementInputValue.x + " " + movementInputValue.y);
         // TODO --- Va messo in FIXED
         rb.linearVelocity = new Vector2
             (
                 SPEED * movementInputValue.x,
                 rb.linearVelocity.y
             );
-
-            
-
+        Debug.Log("Porcodio");
 
         OnPlayerMove.Invoke();
-        Debug.Log(movementInputValue);
     }
     
     /// <summary>
@@ -113,19 +138,6 @@ public class Player : MonoBehaviour
     {
         canMove = true;
     }
-
-    void MovementLogicTest()
-    {
-        Vector2 movementInputValue = 
-            moveInput.ReadValue<Vector2>();
-        
-        rb.position= new Vector2
-        (
-            rb.position.x + SPEED * movementInputValue.x,
-            rb.position.y + SPEED * movementInputValue.y
-        );
-    }
-    
     
 
     /// <summary>
@@ -134,16 +146,22 @@ public class Player : MonoBehaviour
     void FeedBackArrowMovement()
     {
         Vector2 movementInputValue = 
-            moveInput.ReadValue<Vector2>();
-
+            plrInp.actions.FindAction("Move").ReadValue<Vector2>();
+            //moveInput.ReadValue<Vector2>();
+        plrInp.ActivateInput();
 
         if(movementInputValue != Vector2.zero)
         {
             //arrowRotationPivot.transform.LookAt(movementInputValue); 
-            float angle = Vector2.SignedAngle(new Vector2(1f,0), movementInputValue);
-            Debug.Log("Angle: " + angle); 
+            float angle = 
+                Vector2.SignedAngle
+                (
+                    new Vector2(1f,0),
+                    movementInputValue
+                );
             arrowRotationPivot.transform.localRotation = 
-            Quaternion.Euler(0f, 0f, angle);
+                Quaternion.Euler(0f, 0f, angle);
+
         }
     }
 
@@ -154,22 +172,45 @@ public class Player : MonoBehaviour
     {
         OnPlayerMove = new UnityEvent();
         canMove = true;
+
+        plrInp = GetComponent<PlayerInput>();
     } 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        moveInput = InputSystem.actions.FindAction("Move");
-        jumpInput = InputSystem.actions.FindAction("Jump");
+        moveInput = plrInp.actions.FindAction("Move");
+        jumpInput = plrInp.actions.FindAction("Jump");
+        Debug.Log(plrInp.devices.Count);
 
         rb.gravityScale = FALL_SPEED;
     }
 
+    void Update()
+    {
 
+        //Debug.Log("Gm: " + GameManager.Get().ball);
+        if(moveInput.ReadValue<Vector2>() != Vector2.zero)
+        {
+            directionLastInput = moveInput.ReadValue<Vector2>();
+        }
+        plrInp.ActivateInput();
+        Debug.Log("PlayerInp: " + plrInp.inputIsActive);
+        Debug.Log("ActionInp: " + moveInput.enabled);
+        Debug.Log("GetAction: " + plrInp.actions.FindAction("Move").ReadValue<Vector2>());        
+        Debug.Log("Action: " + moveInput.ReadValue<Vector2>());        
+
+        MovementLogic();
+        FeedBackArrowMovement();
+    }
+
+    public void OnMove()
+    {
+        Debug.Log("Player: OnMove");
+    }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        MovementLogic();
-        FeedBackArrowMovement();
+
     }
 }
