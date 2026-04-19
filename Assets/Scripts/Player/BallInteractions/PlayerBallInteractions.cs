@@ -69,7 +69,7 @@ public class PlayerBallInteractions : MonoBehaviour
         fsm = new BallInteractionsFSM();
         fsm.pbi = this;
         
-        kickInput = plr.plrInp.actions.FindAction("Kick");
+
         
         onKickStart = new UnityEvent();
         onKickEnd = new UnityEvent();
@@ -81,7 +81,7 @@ public class PlayerBallInteractions : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        kickInput = plr.plrInp.actions.FindAction("Kick");
     }
 
     // Update is called once per frame
@@ -89,13 +89,8 @@ public class PlayerBallInteractions : MonoBehaviour
     {
         activeState = fsm._currentState._d_stateName;
         fsm.Update();
-        plr.plrInp.DeactivateInput();
-        Debug.Log(plr.plrInp.actions["Jump"].enabled);
     }   
 
     
-    public void OnMove()
-    {
-        Debug.Log("PlayerBallInteractions: OnMove");
-    }
+
 }

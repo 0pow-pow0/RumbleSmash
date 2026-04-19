@@ -54,10 +54,6 @@ public class PlayerJump : MonoBehaviour
     // ? --- Potrei anche fare dei metodi che si richiamano fino a che
     // ? --- non si termina uno dei due salti
 
-    public void OnMove()
-    {
-        Debug.Log("PlayerJump: OnMove");
-    }
 
     void InputLogic()
     {

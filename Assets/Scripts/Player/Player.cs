@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using EditorAttributes;
 using EditorAttributes.Editor;
+using Unity.VisualScripting;
 
 public class Player : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class Player : MonoBehaviour
     public GameObject arrowRotationPivot { get; private set; }
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
-    [field: SerializeField] 
+    [field: NonSerialized] 
     public PlayerInput plrInp { get; private set; }
 
 
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    [NonSerialized] public UnityEvent OnPlayerMove;
+    [NonSerialized] public UnityEvent OnPlayerMove = new();
 
 
     public InputAction moveInput { get; private set; }
@@ -64,11 +65,12 @@ public class Player : MonoBehaviour
     // -------------------------------------------
     //TODO: Si potrebbe linkare al playerInput, ma
     // bisogna modificarlo
-    void    MovementLogic()
+    void MovementLogic()
     { 
         Vector2 movementInputValue = 
             plrInp.actions.
                 FindAction("Move").ReadValue<Vector2>();
+
             //moveInput.ReadValue<Vector2>();
         Debug.Log("ASD: " + moveInput.ReadValue<Vector2>());
         if(!canMove)
@@ -112,14 +114,13 @@ public class Player : MonoBehaviour
 
         //rb.AddForce(movementInputValue * SPEED, ForceMode2D.Impulse);
 
-        Debug.Log("M: " + movementInputValue.x + " " + movementInputValue.y);
+        //Debug.Log("M: " + movementInputValue.x + " " + movementInputValue.y);
         // TODO --- Va messo in FIXED
         rb.linearVelocity = new Vector2
             (
                 SPEED * movementInputValue.x,
                 rb.linearVelocity.y
             );
-        Debug.Log("Porcodio");
 
         OnPlayerMove.Invoke();
     }
@@ -170,7 +171,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        OnPlayerMove = new UnityEvent();
         canMove = true;
 
         plrInp = GetComponent<PlayerInput>();
@@ -180,33 +180,22 @@ public class Player : MonoBehaviour
     {
         moveInput = plrInp.actions.FindAction("Move");
         jumpInput = plrInp.actions.FindAction("Jump");
-        Debug.Log(plrInp.devices.Count);
 
         rb.gravityScale = FALL_SPEED;
     }
 
     void Update()
     {
-
-        //Debug.Log("Gm: " + GameManager.Get().ball);
-        if(moveInput.ReadValue<Vector2>() != Vector2.zero)
+            if(moveInput.ReadValue<Vector2>() != Vector2.zero)
         {
             directionLastInput = moveInput.ReadValue<Vector2>();
         }
-        plrInp.ActivateInput();
-        Debug.Log("PlayerInp: " + plrInp.inputIsActive);
-        Debug.Log("ActionInp: " + moveInput.enabled);
-        Debug.Log("GetAction: " + plrInp.actions.FindAction("Move").ReadValue<Vector2>());        
-        Debug.Log("Action: " + moveInput.ReadValue<Vector2>());        
 
         MovementLogic();
         FeedBackArrowMovement();
     }
 
-    public void OnMove()
-    {
-        Debug.Log("Player: OnMove");
-    }
+
 
     // Update is called once per frame
     void FixedUpdate()
