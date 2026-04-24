@@ -64,8 +64,7 @@ public class RoundManager : MonoBehaviour
         roundState = RoundState.START;
         Debug.Log("RoundManager: Round started");
         GameManager.Get().player1.
-            plrInp.DeactivateInput();
-        
+            plrInp.DeactivateInput(); 
         GameManager.Get().player2.
             plrInp.DeactivateInput();
 
@@ -75,11 +74,11 @@ public class RoundManager : MonoBehaviour
 
         PowUtilityU.Get().DelayAction
         (
-            () =>
+            (Action)(() =>
             {
                 GameManager.Get().player1.
                     plrInp.ActivateInput();
-            
+
                 GameManager.Get().player2.
                     plrInp.ActivateInput();
 
@@ -88,7 +87,7 @@ public class RoundManager : MonoBehaviour
                 Debug.Log("RoundManager: Round begin!");
 
                 roundState = RoundState.MID;
-            },
+            }),
             START_ROUND_COUNTDOWN_DURATION
         );
 

@@ -1,4 +1,4 @@
-using System;
+ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,7 +9,7 @@ using UtilityShit;
 public class InputManagerLogic : MonoBehaviour
 {
     PlayerInputManager manager;
-    
+
     
     [NonSerialized]
     public UnityEvent onPlayer1Joined;
@@ -76,7 +76,17 @@ public class InputManagerLogic : MonoBehaviour
     /// </summary>
     public void RestartDeviceAssignment()
     {
+        GameManager g = GameManager.Get();
+        if(g.player1 != null)
+        {
+            Destroy(g.player1.gameObject);
+        }
+        if(g.player2 != null)
+        {
+            Destroy(g.player2.gameObject);
+        }
         
+        UIScreensManagerPow.Get().inputHandlingScreen.SetInitialState();
     }
 
     void Update()

@@ -32,12 +32,11 @@ public class UI_InputHandlingScreen : MonoBehaviour
         (
             SetInitialState
         );
-
-        SetInitialState();
     }
 
-    void SetInitialState()
+    public void SetInitialState()
     {
+        father.SetActive(true);
         textPlayer1.gameObject.SetActive(true);
         textPlayer2.gameObject.SetActive(false);
         

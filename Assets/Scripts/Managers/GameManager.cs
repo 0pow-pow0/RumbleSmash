@@ -1,3 +1,4 @@
+using UnityEditor.Build.Content;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,6 +12,21 @@ public class GameManager : MonoBehaviour
     public Player player1 { get; private set; }
     [field: SerializeField] 
     public Player player2 { get; private set; }
+
+    /// <summary>
+    /// Check per vedere se i player sono assegnati.       
+    /// </summary>
+    /// <returns>Vero se ENTRAMBI i player sono assegnati</returns>
+    public bool IsPlayersAssigned()
+    {
+        if(player1 != null ||
+            player2 != null)
+        {
+            return false;
+        }
+
+        return true;    
+    }
 
     public void SetPlayer1(Player plr1)
     {
