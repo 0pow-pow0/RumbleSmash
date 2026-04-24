@@ -25,6 +25,33 @@ public class PowUtilityU : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="action">Il parametro conterra' 
+    /// il tempo passato dall'inizio della coroutine  
+    /// </param>
+    /// <param name="exitCondition"></param>
+    public void DoActionUntil(
+        Action<float> action,
+        Func<float, bool> exitCondition)
+    {
+        StartCoroutine(DoActionUntilRoutine(action, exitCondition));
+    }
+    private IEnumerator DoActionUntilRoutine
+    (
+        Action<float> action,
+        Func<float, bool> exitCondition
+    )
+    {
+        float passedTime = 0f;
+        while(exitCondition.Invoke(passedTime) == true)
+        {
+            action.Invoke(passedTime);
+            passedTime += Time.deltaTime;   
+            yield return null;
+        }
+    }
 
     // -------------------------------------------
     // ! Color related

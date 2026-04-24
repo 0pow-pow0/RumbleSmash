@@ -39,14 +39,16 @@ namespace UtilityShit
         ///<summary>
         /// Permette di colorare il testo O.O :O
         ///</summary>
-            public static void Log(object message, Color clr)
+        public static void Log(object message, Color clr)
+        {
+            if (clr == null)
             {
-                if (clr == null)
-                {
-                    Debug.Log(message);
-                }
-                    Debug.Log("<color=" + "#" + ColorUtility.ToHtmlStringRGB(clr) + ">" + message + "</color>");
+                Debug.Log(message);
             }
+                Debug.Log("<color=" + "#" + ColorUtility.ToHtmlStringRGB(clr) + ">" + message + "</color>");
+        }
+
+
 
         /// <summary>
         /// Per iterare un array di gameObjects e disattivarli

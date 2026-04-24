@@ -13,7 +13,8 @@ public enum RoundState
 }
 
 /// <summary>
-/// Il beaviour viene gestito dal matchManager
+/// L'update viene gestito dal match manager
+/// TODO: Sposta dentro MatchManager
 /// </summary>
 public class RoundManager : MonoBehaviour
 {
@@ -95,9 +96,11 @@ public class RoundManager : MonoBehaviour
 
     public void RoundEnd()
     {
-        roundState = RoundState.MID;
+        roundState = RoundState.END;
+        InputManagerLogic.Get().DeactivateAllInputs();
+        
+        
         onRoundEnd.Invoke();
-
         PowUtilityU.Get().DelayAction(
             RoundStart, END_ROUND_DELAY_RESTART);
     }

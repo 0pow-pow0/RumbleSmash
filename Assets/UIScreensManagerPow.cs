@@ -4,7 +4,7 @@ public class UIScreensManagerPow : MonoBehaviour
 {
     [Header("References"), SerializeField]
     public UI_InputHandlingScreen inputHandlingScreen;
-
+    public UIRoundAnimations roundAnimationsScreen;
 
     
     // -------------------------------------------

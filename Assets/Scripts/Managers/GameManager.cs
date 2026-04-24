@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using UnityEditor.Build.Content;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -12,6 +13,12 @@ public class GameManager : MonoBehaviour
     public Player player1 { get; private set; }
     [field: SerializeField] 
     public Player player2 { get; private set; }
+
+    [field: Header("Gameplay Stats"), SerializeField]
+    public Goal player1Goal { get; private set;}
+    
+    [field: SerializeField]
+    public Goal player2Goal { get; private set; }
 
     /// <summary>
     /// Check per vedere se i player sono assegnati.       
@@ -38,23 +45,7 @@ public class GameManager : MonoBehaviour
         player2 = plr2;
     }
 
-    public void DeactivateAllInputs()
-    {
-        if(player1 != null)
-            player1.plrInp.DeactivateInput();
-        if(player2 != null)
-        player2.plrInp.DeactivateInput();
-        // TODO: disattiva input UI        
-    }
 
-    public void ActivateAllInputs()
-    {
-        if(player1 != null)
-            player1.plrInp.ActivateInput();
-        if(player2 != null)
-            player2.plrInp.ActivateInput();
-        // TODO: attiva input UI                
-    }
 
     // -------------------------------------------
     // ! Singleton shit

@@ -1,5 +1,8 @@
 using System;
 using EditorAttributes;
+using NUnit.Framework;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -8,10 +11,14 @@ using UtilityShit;
 /// <summary>
 /// Si occupera' di ogni cosa relativa al match, 
 /// dall'input manager alla scoreboard.  
+/// 
+/// Gestisce anche le porte 
 /// </summary>
 public class MatchManager : MonoBehaviour
 {
-    [Header("Gameplay Stats")]
+    [field: Header("Gameplay Stats"), SerializeField]
+    public int ScoreToWin { get; private set; }
+
     public int player1Score { get; private set;}
     public int player2Score { get; private set; }
 
@@ -23,10 +30,26 @@ public class MatchManager : MonoBehaviour
     // ! --- Match Related
     [NonSerialized]
     public UnityEvent onMatchBegin = new();
+    public void MatchBegin()
+    {
+        PowUtility.Log("Match: BeginningMatch", Color.cyan);
+
+        //AssignPlayers();
+
+
+        onMatchBegin.Invoke();
+    }
 
     [NonSerialized]
     public UnityEvent onMatchEnd = new();
+    public void MatchEnd()
+    {
+        SetGoals(false);
+        InputManagerLogic.Get().DeactivateAllInputs();
+                
 
+        onMatchEnd.Invoke();
+    }
 
     // ! --- Scoreboard Related
     // ? --- Passera' gli score dei player
@@ -35,18 +58,45 @@ public class MatchManager : MonoBehaviour
     
     [NonSerialized]
     public UnityEvent<int> onPlayer2Score = new();
-    void ScorePlayer1(int toAddPoints)
+
+    /// <summary>
+    /// Chiamata dalle porte.
+    /// </summary>
+    /// <param name="toAddPoints">Quanto aggiungere allo score</param>
+    public void ScorePlayer1(int toAddPoints)
     {
         player1Score += toAddPoints; 
 
-        onPlayer1Score.Invoke(player1Score);    
+        onPlayer1Score.Invoke(player1Score);   
+        
+        if(!CheckMatchEndConditions())
+        {
+            RoundManager.Get().RoundEnd();
+        }
+        else
+        {
+            MatchEnd();
+        }
     }
 
-    void ScorePlayer2(int toAddPoints)
+    /// <summary>
+    /// Chiamata dalle porte.
+    /// </summary>
+    /// <param name="toAddPoints">Quanto aggiungere allo score</param>
+    public void ScorePlayer2(int toAddPoints)
     {
         player2Score += toAddPoints;
 
+
         onPlayer2Score.Invoke(player2Score);
+        if(!CheckMatchEndConditions())
+        {
+            RoundManager.Get().RoundEnd();
+        }
+        else
+        {
+            MatchEnd();
+        }
     }
 
     public void AssignPlayers()
@@ -58,23 +108,30 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-
-
-    public void MatchBegin()
+    void SetGoals(bool isActive)
     {
-        PowUtility.Log("Match: BeginningMatch", Color.cyan);
-
-        //AssignPlayers();
-
-
-        onMatchBegin.Invoke();
+        GameManager.Get().player1Goal.gameObject.SetActive(isActive);
+        GameManager.Get().player2Goal.gameObject.SetActive(isActive);
     }
 
-    public void MatchEnd()
+    bool CheckMatchEndConditions()
     {
+        if(player1Score >= ScoreToWin)
+        {
+            PowUtility.Log("Player 1 Won", Color.yellow);
+            return true;
+        }
+        if(player2Score >= ScoreToWin)
+        {
+            PowUtility.Log("Player 2 Won", Color.yellow);
+            return true;
+        }
 
-        onMatchEnd.Invoke();
+        return false;
     }
+
+
+
 
 
     void Awake()

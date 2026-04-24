@@ -89,6 +89,26 @@ public class InputManagerLogic : MonoBehaviour
         UIScreensManagerPow.Get().inputHandlingScreen.SetInitialState();
     }
 
+    public void DeactivateAllInputs()
+    {
+        GameManager g = GameManager.Get();
+        if(g.player1 != null)
+            g.player1.plrInp.DeactivateInput();
+        if(g.player2 != null)
+        g.player2.plrInp.DeactivateInput();
+        // TODO: disattiva input UI        
+    }
+
+    public void ActivateAllInputs()
+    {
+        GameManager g = GameManager.Get();
+        if(g.player1 != null)
+            g.player1.plrInp.ActivateInput();
+        if(g.player2 != null)
+            g.player2.plrInp.ActivateInput();
+        // TODO: attiva input UI                
+    }
+
     void Update()
     {
         
