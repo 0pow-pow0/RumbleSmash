@@ -17,7 +17,7 @@ using UtilityShit;
 public class MatchManager : MonoBehaviour
 {
     [field: Header("Gameplay Stats"), SerializeField]
-    public int ScoreToWin { get; private set; }
+    public int SCORE_TO_WIN { get; private set; }
 
     public int player1Score { get; private set;}
     public int player2Score { get; private set; }
@@ -40,16 +40,32 @@ public class MatchManager : MonoBehaviour
         onMatchBegin.Invoke();
     }
 
+    /// <summary>
+    /// Invochera' passando come parametro il player vincitore.
+    /// </summary>
     [NonSerialized]
-    public UnityEvent onMatchEnd = new();
+    public UnityEvent<Player> onMatchEnd = new();
     public void MatchEnd()
     {
-        SetGoals(false);
-        InputManagerLogic.Get().DeactivateAllInputs();
-                
+        GameManager g = GameManager.Get();
+        g.player1Goal.SetScoreCollider(false);
+        g.player2Goal.SetScoreCollider(false);
 
-        onMatchEnd.Invoke();
+        InputManagerLogic.Get().DeactivateAllInputs();
+
+
+        if(player1Score >= SCORE_TO_WIN)
+        {
+            onMatchEnd.Invoke(g.player1);   
+        }
+        else if (player2Score >= SCORE_TO_WIN)
+        {
+            onMatchEnd.Invoke(g.player2);
+        }
     }
+
+    [NonSerialized]
+    public UnityEvent onMatchRestart = new();
 
     // ! --- Scoreboard Related
     // ? --- Passera' gli score dei player
@@ -99,6 +115,8 @@ public class MatchManager : MonoBehaviour
         }
     }
 
+    
+
     public void AssignPlayers()
     {
         if(!GameManager.Get().IsPlayersAssigned())
@@ -107,21 +125,14 @@ public class MatchManager : MonoBehaviour
             PowUtility.Log("Match: Assigning players", Color.cyan);
         }
     }
-
-    void SetGoals(bool isActive)
-    {
-        GameManager.Get().player1Goal.gameObject.SetActive(isActive);
-        GameManager.Get().player2Goal.gameObject.SetActive(isActive);
-    }
-
     bool CheckMatchEndConditions()
     {
-        if(player1Score >= ScoreToWin)
+        if(player1Score >= SCORE_TO_WIN)
         {
             PowUtility.Log("Player 1 Won", Color.yellow);
             return true;
         }
-        if(player2Score >= ScoreToWin)
+        if(player2Score >= SCORE_TO_WIN)
         {
             PowUtility.Log("Player 2 Won", Color.yellow);
             return true;
@@ -133,7 +144,9 @@ public class MatchManager : MonoBehaviour
 
 
 
-
+    // -------------------------------------------
+    // ! Unity Methods
+    // -------------------------------------------
     void Awake()
     {
         InitSingleton();

@@ -9,12 +9,9 @@ public class Goal : MonoBehaviour
 
     [SerializeField]
     BoxCollider2D coll;
-
-    [System.Serializable]
-    public enum PlayerNumber
+    public void SetScoreCollider(bool isActive)
     {
-        PLAYER_1 = 1,
-        PLAYER_2
+        coll.enabled = isActive;
     }
 
 
@@ -25,7 +22,7 @@ public class Goal : MonoBehaviour
     [SerializeField]
     public PlayerNumber playerNumber = new();
     
-    public  void Score()
+    public void Score()
     {
         if(playerNumber == PlayerNumber.PLAYER_1)
         {
@@ -40,13 +37,6 @@ public class Goal : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
 }

@@ -11,6 +11,8 @@
     /// ricevere informazioni utili per processare azioni nei codici dei singoli stati.
     /// 
     /// Modificata ad hoc per questo scenario
+    /// 
+    /// TODO: dovrei ereditare dalla FSM base che ho sviluppato per la palla.
     /// </summary>
     public class BallInteractionsFSM
     {
@@ -70,9 +72,12 @@
             return false;
         }
 
-
-        void ActivateColliders(float powerToImpress)
+        /// <summary>
+        /// Non richiama metodi come StateExit, StateEnter, CanEnterState,
+        /// prima di switchare.
+        /// </summary>  
+        public void DirtySwitch(BaseState newState)
         {
-            
-        }
+            _currentState = newState;
+        }   
     }

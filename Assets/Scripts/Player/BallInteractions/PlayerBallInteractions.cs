@@ -51,7 +51,10 @@ public class PlayerBallInteractions : MonoBehaviour
     //bool isShooting;
     BallInteractionsFSM fsm;
 
-
+    public void Reset()
+    {
+        fsm.DirtySwitch(fsm.awaitState);
+    }
 
     // -------------------------------------------
     // ! Events
@@ -90,7 +93,5 @@ public class PlayerBallInteractions : MonoBehaviour
         activeState = fsm._currentState._d_stateName;
         fsm.Update();
     }   
-
-    
 
 }

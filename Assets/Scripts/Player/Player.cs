@@ -3,21 +3,30 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using EditorAttributes;
-using EditorAttributes.Editor;
-using Unity.VisualScripting;
+
+
+[System.Serializable]
+public enum PlayerNumber
+{
+    PLAYER_1 = 1,
+    PLAYER_2
+}
 
 public class Player : MonoBehaviour
 {
+    [field: SerializeField, EditorAttributes.ReadOnly]
+    public PlayerNumber plrNumber { get; private set; } = new();
+
     [Header("References")]
     [field: SerializeField] 
     public Rigidbody2D rb { get; private set; }
-    [field: SerializeField] 
+    [field: SerializeField]  
     public GameObject arrowRotationPivot { get; private set; }
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
     [field: NonSerialized] 
     public PlayerInput plrInp { get; private set; }
-
+    
 
     // ! --------------------------------------------
     #region GameplayStats
@@ -63,6 +72,20 @@ public class Player : MonoBehaviour
     // -------------------------------------------
     // ! Gameplay Logic
     // -------------------------------------------
+
+    /// <summary>
+    /// Resetta a valori iniziali il player, la sua fisica e la sua fsm
+    /// </summary>
+    public void Reset()
+    {
+        StopAllCoroutines();
+        rb.linearVelocity = Vector2.zero;
+        
+        // TODO: Brutto ma necessario xD
+        GetComponent<PlayerBallInteractions>().Reset();
+    } 
+
+
     //TODO: Si potrebbe linkare al playerInput, ma
     // bisogna modificarlo
     void MovementLogic()
@@ -71,8 +94,6 @@ public class Player : MonoBehaviour
             plrInp.actions.
                 FindAction("Move").ReadValue<Vector2>();
 
-            //moveInput.ReadValue<Vector2>();
-        Debug.Log("ASD: " + moveInput.ReadValue<Vector2>());
         if(!canMove)
             return;
 
@@ -149,7 +170,7 @@ public class Player : MonoBehaviour
         Vector2 movementInputValue = 
             plrInp.actions.FindAction("Move").ReadValue<Vector2>();
             //moveInput.ReadValue<Vector2>();
-        plrInp.ActivateInput();
+
 
         if(movementInputValue != Vector2.zero)
         {

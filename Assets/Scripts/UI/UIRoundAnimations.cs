@@ -17,7 +17,8 @@ public class UIRoundAnimations : MonoBehaviour
     TextMeshProUGUI textRoundCountdown;
 
     /// <summary>
-    /// Verra' mostrato a schermo un timer arrotondato alla cifra decimale  
+    /// Verra' mostrato a schermo un timer arrotondato alla cifra decimale.
+    /// Sembrera' fuori tempo se si passa un cifra non intera.    
     /// </summary>
     /// <param name="duration"></param>
     public void StartCountdownAnimation(float duration)
@@ -34,7 +35,7 @@ public class UIRoundAnimations : MonoBehaviour
                 // ? --- +0.99 per non mostrare lo 0 e non arrotondare al
                 // ? --- numero successivo
                 int roundedTime = (int)(duration - passedTime + 0.99f);
-
+                Debug.Log("RoundedTime: " + roundedTime);
                 textRoundCountdown.text = "" + roundedTime;
             },
             (float passedTime) =>
@@ -63,12 +64,10 @@ public class UIRoundAnimations : MonoBehaviour
     }
 
 
-    void Update()
+
+    void Start()
     {
-        if(Keyboard.current.zKey.wasPressedThisFrame)
-        { 
-            Debug.Log("pene");
-            StartCountdownAnimation(3f);
-        }
+        RoundManager.Get().onRoundStartCountdown.
+            AddListener(StartCountdownAnimation);
     }
 }

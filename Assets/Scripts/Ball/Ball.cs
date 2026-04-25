@@ -34,15 +34,29 @@ public class Ball : MonoBehaviour
     public PhysicsMaterial2D endlessBounciness;
     public PhysicsMaterial2D veryHardBounciness;
     public PhysicsMaterial2D hardBounciness;
+
+
     #endregion
 
+    /// <summary>
+    /// Resetta completamente la palla, la sua fisica, il suo behaviour,
+    /// portandola ad uno stato simile a quello di "inizio play della scena"  
+    /// </summary>
+    public void Reset()
+    {
+        StopAllCoroutines();
 
+        rb.linearVelocity = Vector2.zero;
+        fsm.DirtySwitch(fsm.stage1);
+
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
 
     // -------------------------------------------
     // ! Stage1 
     // -------------------------------------------
     #region Stage1
-    [field: Header("Stage Vars"), SerializeField] 
+    [field: Header("Stage 1 Stats"), SerializeField] 
     public float STAGE1_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
     public float STAGE1_GRAVITY_SCALE { get; private set; }
@@ -55,7 +69,7 @@ public class Ball : MonoBehaviour
     // -------------------------------------------
     #region Stage2
     // ? --- Per andare allo stage 2
-    [field: Space(10), SerializeField]
+    [field: Header("Stage 2 Stats"), Space(10), SerializeField]
     public float STAGE2_MIN_MAGNITUDE { get; private set; }
     
     [field: SerializeField]
@@ -77,7 +91,7 @@ public class Ball : MonoBehaviour
     // ! Stage3 
     // -------------------------------------------
     #region Stage3
-    [field: Space(10), SerializeField]
+    [field: Header("Stage 3 Stats"), Space(10), SerializeField]
     public float STAGE3_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
     public float STAGE3_MAX_MAGNITUDE { get; private set; }

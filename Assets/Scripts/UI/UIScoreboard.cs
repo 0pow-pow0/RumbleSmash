@@ -5,6 +5,8 @@ public class UIScoreboard : MonoBehaviour
 {
     [Header("References")]
     [SerializeField]
+    GameObject father;
+    [SerializeField]
     TextMeshProUGUI textPlayer1Score;
     [SerializeField]
     TextMeshProUGUI textPlayer2Score;
@@ -15,6 +17,12 @@ public class UIScoreboard : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        MatchManager.Get().onMatchBegin
+            .AddListener
+            (
+                SetInitialState
+            );
+
         MatchManager.Get().onPlayer1Score.AddListener(
             SetPlayer1Points
         );
@@ -28,6 +36,15 @@ public class UIScoreboard : MonoBehaviour
         SetPlayer2Points(0);
     }
 
+    void SetInitialState()
+    {
+        father.SetActive(true);
+        textPlayer1Score.text = "0";
+        textPlayer1Score.gameObject.SetActive(true);
+        textPlayer2Score.text = "0";
+        textPlayer2Score.gameObject.SetActive(true);
+    }
+
     void SetPlayer1Points(int totalPoints)
     {
         textPlayer1Score.text = "" + totalPoints;
@@ -39,9 +56,4 @@ public class UIScoreboard : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

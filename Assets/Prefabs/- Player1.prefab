@@ -58,7 +58,6 @@ MonoBehaviour:
   <rb>k__BackingField: {fileID: 3574959649751436023}
   <arrowRotationPivot>k__BackingField: {fileID: 5964232268318793458}
   <ballCollider>k__BackingField: {fileID: 1514547853538515338}
-  <plrInp>k__BackingField: {fileID: 6927688274456618118}
   SPEED: 5
   FALL_SPEED: 1
   FALL_SPEED_ON_INPUT: 4
@@ -103,7 +102,7 @@ MonoBehaviour:
   <KICK_FORCE_CHARGED_MAX>k__BackingField: 15
   <TIME_TO_REACH_MAX_CHARGE>k__BackingField: 1
   <CHARGE_WINDOW>k__BackingField: 0.5
-  <KICK_COLLIDER_FRAME_DURATION>k__BackingField: 3
+  <KICK_COLLIDER_FRAME_DURATION>k__BackingField: 30
 --- !u!50 &3574959649751436023
 Rigidbody2D:
   serializedVersion: 5
@@ -536,7 +535,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: eef8304bbcc36fd4da1de5efa952e9a6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0

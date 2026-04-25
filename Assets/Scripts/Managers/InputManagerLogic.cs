@@ -1,4 +1,4 @@
- using System;
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -95,7 +95,7 @@ public class InputManagerLogic : MonoBehaviour
         if(g.player1 != null)
             g.player1.plrInp.DeactivateInput();
         if(g.player2 != null)
-        g.player2.plrInp.DeactivateInput();
+            g.player2.plrInp.DeactivateInput();
         // TODO: disattiva input UI        
     }
 
@@ -111,7 +111,6 @@ public class InputManagerLogic : MonoBehaviour
 
     void Update()
     {
-        
     }
 
 
