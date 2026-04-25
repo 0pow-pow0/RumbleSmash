@@ -43,7 +43,7 @@ public class UIMatchAnimations : MonoBehaviour
         panelBackground.gameObject.SetActive(false);
         buttonRetry.gameObject.SetActive(false);
         buttonExit.gameObject.SetActive(false);
-    }
+    }   
 
     void OnMatchEnd(Player winner)
     {
@@ -74,8 +74,8 @@ public class UIMatchAnimations : MonoBehaviour
     }
 
     public void OnButtonRetryClick()
-    {
-        MatchManager.Get().onMatchRestart.Invoke();
+    { 
+        MatchManager.Get().MatchRestart();
     }
 
     public void OnButtonExitClick()

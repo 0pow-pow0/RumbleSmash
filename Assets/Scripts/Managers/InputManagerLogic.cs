@@ -89,6 +89,58 @@ public class InputManagerLogic : MonoBehaviour
         UIScreensManagerPow.Get().inputHandlingScreen.SetInitialState();
     }
 
+    public void DeactivateAllPlayerMap()
+    {
+        GameManager g = GameManager.Get();
+        if(g.player1 != null)
+        {
+            InputActionMap aMp = 
+                g.player1.plrInp.actions.FindActionMap("Player");
+
+            if(aMp != null)
+            {
+                aMp.Disable();
+            }
+        }
+
+        if(g.player2 != null)
+        {
+            InputActionMap aMp = 
+                g.player2.plrInp.actions.FindActionMap("Player");
+
+            if(aMp != null)
+            {
+                aMp.Disable();
+            }
+        }
+    }
+
+    public void ActivateAllPlayerMap()
+    {
+        GameManager g = GameManager.Get();
+        if(g.player1 != null)
+        {
+            InputActionMap aMp = 
+                g.player1.plrInp.actions.FindActionMap("Player");
+
+            if(aMp != null)
+            {
+                aMp.Enable();
+            }
+        }
+
+        if(g.player2 != null)
+        {
+            InputActionMap aMp = 
+                g.player2.plrInp.actions.FindActionMap("Player");
+
+            if(aMp != null)
+            {
+                aMp.Enable();
+            }
+        }
+    }
+
     public void DeactivateAllInputs()
     {
         GameManager g = GameManager.Get();

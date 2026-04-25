@@ -71,7 +71,7 @@ public class RoundManager : MonoBehaviour
     {
         roundState = RoundState.START;
         PowUtility.Log("RoundManager: Round countdown", Color.cyan);
-        InputManagerLogic.Get().DeactivateAllInputs();
+        InputManagerLogic.Get().DeactivateAllPlayerMap();
 
         GameManager g = GameManager.Get();
 

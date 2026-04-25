@@ -15,7 +15,10 @@ namespace GenericManagers {
 }
 
 class MatchManager {
-    <<Singleton>>
+    <<Singleton>>`
+    >MatchBegin
+    >MatchRestart
+    >MatchEnd
     >onPlayer1Score
     >onPlayer2Score
 }
@@ -40,6 +43,7 @@ RoundManager --> InputManager : utilizza
 
 MatchManager --> InputManager : utilizza
 
+InputManager --> GameManager
 
 note for GameManager "Possiede reference di quasi tutto"
 
@@ -64,7 +68,7 @@ UIScoreboard ..> MatchManager : si iscrive a >onPlayer1Score e >onPlayer2Score
 
 UIRoundAnimations ..> RoundManager : si iscrive a >...countdown
 
-UIMatchAnimations --> MatchManager : si iscrive a >MatchBegin e >MatchEnd <br/> <br/> Chiama onMatchRestart
+UIMatchAnimations --> MatchManager : si iscrive a >MatchBegin e >MatchEnd <br/> <br/> Chiama MatchRestart
 
 
 ```

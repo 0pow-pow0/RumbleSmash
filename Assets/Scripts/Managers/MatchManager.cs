@@ -51,7 +51,7 @@ public class MatchManager : MonoBehaviour
         g.player1Goal.SetScoreCollider(false);
         g.player2Goal.SetScoreCollider(false);
 
-        InputManagerLogic.Get().DeactivateAllInputs();
+        InputManagerLogic.Get().DeactivateAllPlayerMap();
 
 
         if(player1Score >= SCORE_TO_WIN)
@@ -66,6 +66,22 @@ public class MatchManager : MonoBehaviour
 
     [NonSerialized]
     public UnityEvent onMatchRestart = new();
+
+    public void MatchRestart()
+    {
+        PowUtility.Log("Match: Restarting!", Color.cyan);
+
+        MatchBegin(); // xD
+
+        player1Score = 0;
+        player2Score = 0;
+
+        RoundManager.Get().RoundStart();
+
+        onMatchRestart.Invoke();
+    }
+
+
 
     // ! --- Scoreboard Related
     // ? --- Passera' gli score dei player
