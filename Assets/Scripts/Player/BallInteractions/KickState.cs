@@ -26,7 +26,8 @@ public class KickState : BaseState
         {
            return; 
         }
-        
+        p.pbi.plr.DisableMovement();
+
         timePassedSinceInput = 0;
         isSwitchingToCharge = false;
     }
@@ -61,6 +62,8 @@ public class KickState : BaseState
     }
     public override void StateExit(BallInteractionsFSM p)
     {
+        p.pbi.plr.EnableMovement();
+
         if(!isSwitchingToCharge)
             p.pbi.onKickEnd.Invoke();
     }

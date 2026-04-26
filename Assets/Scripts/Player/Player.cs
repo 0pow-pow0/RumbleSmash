@@ -21,7 +21,9 @@ public class Player : MonoBehaviour
     [field: SerializeField] 
     public Rigidbody2D rb { get; private set; }
     [field: SerializeField]  
-    public GameObject arrowRotationPivot { get; private set; }
+    public GameObject pivotArrowRotation { get; private set; }
+    [field: SerializeField]
+    public GameObject pivotSpriteColl { get; private set; }
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
     [field: NonSerialized] 
@@ -29,13 +31,14 @@ public class Player : MonoBehaviour
     
 
     // ! --------------------------------------------
-    #region GameplayStats
+    #region Gameplay Stats
     [Header("Gameplay Stats")]
     [SerializeField] public float SPEED;
     [SerializeField] public float FALL_SPEED;
     [SerializeField] public float FALL_SPEED_ON_INPUT;
 
     [FoldoutGroup("Flags", nameof(isOnGround), nameof(canMove))]
+    
     [SerializeField] private EditorAttributes.Void flagsHolder;
     [SerializeField, HideProperty, ReadOnly] public bool isOnGround;
     [SerializeField, HideProperty, ReadOnly] private bool canMove = true;
@@ -73,6 +76,7 @@ public class Player : MonoBehaviour
     // ! Gameplay Logic
     // -------------------------------------------
 
+    #region Gameplay Logic
     /// <summary>
     /// Resetta a valori iniziali il player, la sua fisica e la sua fsm
     /// </summary>
@@ -80,10 +84,13 @@ public class Player : MonoBehaviour
     {
         StopAllCoroutines();
         rb.linearVelocity = Vector2.zero;
-        
+        EnableMovement();
+
+
         // TODO: Brutto ma necessario xD
         GetComponent<PlayerBallInteractions>().Reset();
     } 
+
 
 
     //TODO: Si potrebbe linkare al playerInput, ma
@@ -153,6 +160,8 @@ public class Player : MonoBehaviour
     public void DisableMovement()
     {
         canMove = false;
+        // ? --- Se disabilitiamo l'input mentre il player
+        // ? --- utilizza la "FAST FALL" rimarrebbe lockata in quel modo.
         rb.gravityScale = FALL_SPEED;
     }
 
@@ -161,6 +170,7 @@ public class Player : MonoBehaviour
         canMove = true;
     }
     
+
 
     /// <summary>
     /// Describes the movement of the feedback arrow
@@ -181,12 +191,37 @@ public class Player : MonoBehaviour
                     new Vector2(1f,0),
                     movementInputValue
                 );
-            arrowRotationPivot.transform.localRotation = 
+            pivotArrowRotation.transform.localRotation = 
                 Quaternion.Euler(0f, 0f, angle);
 
         }
     }
 
+
+
+    public void RotateTowardsFeedbackArrow()
+    {
+        pivotSpriteColl.transform.localRotation = 
+            Quaternion.Euler(new Vector3
+            (
+                0f,
+                0f,
+                pivotArrowRotation.transform.localEulerAngles.z
+            ));
+    }
+
+    public void ResetSpriteAndCollRotation()
+    {
+         pivotSpriteColl.transform.localRotation = 
+            Quaternion.Euler(new Vector3
+            (
+                0f,
+                0f,
+                0f
+            ));
+    }
+
+    #endregion
 
 
 

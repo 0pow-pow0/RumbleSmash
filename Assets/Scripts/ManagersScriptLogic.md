@@ -6,7 +6,7 @@ classDiagram
 %% ---------------- Managers
 namespace GenericManagers {
     class GameManager { 
-        <<Singleton>>
+    <<Singleton>>
     }
 
     class InputManager {
@@ -15,7 +15,7 @@ namespace GenericManagers {
 }
 
 class MatchManager {
-    <<Singleton>>`
+    <<Singleton>>
     >MatchBegin
     >MatchRestart
     >MatchEnd
@@ -47,6 +47,7 @@ InputManager --> GameManager
 
 note for GameManager "Possiede reference di quasi tutto"
 
+note for RoundManager "Sarebbe meglio che facesse <br/> parte di MatchManager per composizione"
 
 %% ------------- UI
 namespace UI {

@@ -19,6 +19,7 @@ public class ChargingState : BaseState
     }
     public override void StateEnter(BallInteractionsFSM p)
     {
+        p.pbi.plr.DisableMovement();
         timePassedSinceStart = 0f;
         p.pbi.onChargeStart.Invoke();
     }
@@ -54,6 +55,7 @@ public class ChargingState : BaseState
     }
     public override void StateExit(BallInteractionsFSM p)
     {
+        p.pbi.plr.EnableMovement();
         p.pbi.onChargeEnd.Invoke();
     }
 }

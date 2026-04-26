@@ -29,6 +29,10 @@ public class MatchManager : MonoBehaviour
     // -------------------------------------------
     // ! --- Match Related
     [NonSerialized]
+    public UnityEvent onPreMatchShowRivals = new();
+
+
+    [NonSerialized]
     public UnityEvent onMatchBegin = new();
     public void MatchBegin()
     {
