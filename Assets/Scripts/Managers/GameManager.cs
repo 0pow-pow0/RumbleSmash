@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
     /// <returns>Vero se ENTRAMBI i player sono assegnati</returns>
     public bool IsPlayersAssigned()
     {
-        if(player1 != null ||
-            player2 != null)
+        if(player1 == null ||
+            player2 == null)
         {
             return false;
         }
@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
     {
         player2 = plr2;
     }
-
 
 
     // -------------------------------------------
@@ -80,4 +79,21 @@ public class GameManager : MonoBehaviour
         InitSingleton();
     }
 
+
+    void Start()
+    {
+        ball.onImpactFrameStart.AddListener(
+            () =>
+            {
+                Time.timeScale = 0f;
+            }
+        );
+
+        ball.onImpactFrameEnd.AddListener(
+            () =>
+            {
+                Time.timeScale = 1f;
+            }
+        );
+    }
 }

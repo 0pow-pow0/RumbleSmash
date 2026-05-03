@@ -28,6 +28,9 @@ public class PlayerBallInteractions : MonoBehaviour
     [field:SerializeField] public int KICK_FORCE_CHARGED_MAX { get; private set; }
 
 
+    // ? --- Spinta derivata dal calcio
+    [field:SerializeField] public int KICK_FORCE_PUSH { get; private set; }
+
 
     // -------------------------------------------
     // ! Timing 
@@ -49,7 +52,7 @@ public class PlayerBallInteractions : MonoBehaviour
     [SerializeField] private EditorAttributes.Void flagsGroup;
 
     //bool isShooting;
-    BallInteractionsFSM fsm;
+    public BallInteractionsFSM fsm { get; private set;  }
 
     public void Reset()
     {
@@ -59,12 +62,14 @@ public class PlayerBallInteractions : MonoBehaviour
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    [NonSerialized] public UnityEvent onKickStart;
-    [NonSerialized] public UnityEvent onKickEnd;
+    [NonSerialized] public UnityEvent onKickStart = new();
+    [NonSerialized] public UnityEvent onKickEnd = new();
 
-    [NonSerialized] public UnityEvent onChargeStart;
-    [NonSerialized] public UnityEvent onCharging;
-    [NonSerialized] public UnityEvent onChargeEnd;
+    [NonSerialized] public UnityEvent onChargeStart = new();
+    [NonSerialized] public UnityEvent onCharging = new();
+    [NonSerialized] public UnityEvent onChargeEnd = new();
+    // ? --- Passa il punto di collisione con la palla
+    [NonSerialized] public UnityEvent<Vector2> onBallHit = new();
 
 
     void Awake()
@@ -72,13 +77,6 @@ public class PlayerBallInteractions : MonoBehaviour
         fsm = new BallInteractionsFSM();
         fsm.pbi = this;
         
-
-        
-        onKickStart = new UnityEvent();
-        onKickEnd = new UnityEvent();
-        onChargeStart = new UnityEvent();
-        onCharging = new UnityEvent();
-        onChargeEnd = new UnityEvent(); 
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

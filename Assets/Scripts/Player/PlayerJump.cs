@@ -48,8 +48,8 @@ public class PlayerJump : MonoBehaviour
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    UnityEvent onFirstJumpPerformed;
-    UnityEvent onDoppioScattoPerformed;
+    UnityEvent onFirstJumpPerformed = new();
+    UnityEvent onDoppioScattoPerformed = new();
 
     // ? --- Potrei anche fare dei metodi che si richiamano fino a che
     // ? --- non si termina uno dei due salti
@@ -105,12 +105,16 @@ public class PlayerJump : MonoBehaviour
                 // ! --- per il doppioScatto andiamo semplicemente
                 // ! --- verso l'alto.
                 Vector2 doppioScattoValue = moveInputValue;
+                frameDur = 0 ;
                 
                 if(doppioScattoValue == Vector2.zero)
                     doppioScattoValue = new Vector2(0f, 1f);
 
-                plr.rb.AddForce(doppioScattoValue * DOPPIOSCATTO_FORCE, 
-                    ForceMode2D.Impulse);
+                //plr.rb.AddForce(doppioScattoValue * DOPPIOSCATTO_FORCE, 
+                //    ForceMode2D.Impulse);
+
+                plr.rb.linearVelocity = 
+                    doppioScattoValue * DOPPIOSCATTO_FORCE;
 
                 plr.moveInput.Disable();
 
@@ -146,20 +150,22 @@ public class PlayerJump : MonoBehaviour
     }
 
     // ? --- Utilizzato solo quando si sta effettuando il DoppioScatto
+    int frameDur = 0;
     void DoppioScattoLogic()
     {
         if(doppioScattoPerforming)
         {
+            Debug.Log("Magnitude: " + plr.rb.linearVelocity.magnitude); 
             distanceTravelledDoppioScatto += 
-                plr.rb.linearVelocity.magnitude * Time.deltaTime;        
-            
+                plr.rb.linearVelocity.magnitude;        
+            frameDur++;
             
             //Debug.Log("Speed: " + plr.rb.linearVelocity 
                 //+ " " + distanceTravelledDoppioScatto);
 
 
             if(
-                distanceTravelledDoppioScatto 
+                frameDur 
                 >= 
                 DOPPIOSCATTO_MAX_DISTANCE 
                 ||
@@ -167,7 +173,17 @@ public class PlayerJump : MonoBehaviour
                 plr.rb.linearVelocity == Vector2.zero)
             {
                 doppioScattoPerforming = false;
-                plr.EnableMovement();
+
+                // ? --- E' un erorre architetturale questo if,
+                // ? --- in ogni caso, il controllo del movimento
+                // ? --- e' prioritario del kick e charge state cosi' in 
+                // ? --- caso si calciasse e saltasse non venisse attivato
+                // ? --- il movimento a causa del salto MENTRE si calcia.
+                //if(!plr.pbi.fsm.kickState.isActive &&
+                //    !plr.pbi.fsm.chargingState.isActive)
+                //{
+                //    plr.EnableMovement();
+                //}
 
                 distanceTravelledDoppioScatto = 0f;
                 plr.rb.linearVelocity = Vector2.zero;
@@ -188,16 +204,23 @@ public class PlayerJump : MonoBehaviour
 
     void Awake()
     {
-        onFirstJumpPerformed = new UnityEvent();
-        onDoppioScattoPerformed = new UnityEvent();
     }
 
     void Update()
     {
         //if(plr.plrInp.inputIsActive)
+        if(!plr.pbi.fsm.kickState.isActive &&
+            !plr.pbi.fsm.chargingState.isActive)
+        {
             InputLogic();
-        
+        }
+
         FirstJumpLogic();
+        //DoppioScattoLogic();
+    }
+
+    void FixedUpdate()
+    {
         DoppioScattoLogic();
     }
 }

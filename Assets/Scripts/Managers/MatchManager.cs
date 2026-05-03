@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using EditorAttributes;
 using NUnit.Framework;
 using TMPro;
@@ -19,6 +20,8 @@ public class MatchManager : MonoBehaviour
     [field: Header("Gameplay Stats"), SerializeField]
     public int SCORE_TO_WIN { get; private set; }
 
+    [SerializeField]
+    public bool shouldAssignPlayers;
     public int player1Score { get; private set;}
     public int player2Score { get; private set; }
 
@@ -31,6 +34,22 @@ public class MatchManager : MonoBehaviour
     [NonSerialized]
     public UnityEvent onPreMatchShowRivals = new();
 
+    [NonSerialized]
+    public UnityEvent onPreMatchAssignDevices = new();
+    public IEnumerator PreMatchAssignDevices()
+    {
+        AssignPlayers();
+
+        Debug.Log("Palle");
+        // ? --- Aspetta fino a che non si
+        while(!GameManager.Get().IsPlayersAssigned())
+        {
+            yield return null;
+        }
+        
+        onPreMatchAssignDevices.Invoke();
+        MatchBegin();
+    }
 
     [NonSerialized]
     public UnityEvent onMatchBegin = new();
@@ -39,7 +58,7 @@ public class MatchManager : MonoBehaviour
         PowUtility.Log("Match: BeginningMatch", Color.cyan);
 
         //AssignPlayers();
-
+        
 
         onMatchBegin.Invoke();
     }
@@ -174,7 +193,15 @@ public class MatchManager : MonoBehaviour
 
     void Start()
     {        
-        MatchBegin();
+        if(shouldAssignPlayers)
+        {
+            MatchBegin();
+        }
+        else
+        {
+            StartCoroutine(PreMatchAssignDevices()); 
+        }
+
     }
 
     void Update()

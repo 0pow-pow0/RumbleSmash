@@ -4,7 +4,7 @@ classDiagram
 
 
 %% ---------------- Managers
-namespace GenericManagers {
+namespace Managers {
     class GameManager { 
     <<Singleton>>
     }
@@ -12,38 +12,41 @@ namespace GenericManagers {
     class InputManager {
         <<Singleton>>
     }
+
+    class MatchManager {
+        <<Singleton>>
+        >MatchBegin
+        >MatchRestart
+        >MatchEnd
+        >onPlayer1Score
+        >onPlayer2Score
+    }
+
+    class RoundManager {
+        <<Singleton>>
+        >onRoundStartCountdown
+        >onRoundStartBeing
+        >onRoundUpdate
+        >onRoundEnd
+    }
 }
 
-class MatchManager {
-    <<Singleton>>
-    >MatchBegin
-    >MatchRestart
-    >MatchEnd
-    >onPlayer1Score
-    >onPlayer2Score
-}
-
-class RoundManager {
-    <<Singleton>>
-    >onRoundStartCountdown
-    >onRoundStartBeing
-    >onRoundUpdate
-    >onRoundEnd
-}
 
 
 
-Goal --> MatchManager : Trigghera' evento di score
+Goal ..> MatchManager : Trigghera' evento di score
+
+Goal ..> GameManager : Trigghera' evento di score di BALL
 
 MatchManager --> RoundManager : gestisce
-MatchManager --> GameManager : utilizza
+MatchManager ..> GameManager : utilizza
 
-RoundManager --> GameManager : utilizza
+RoundManager ..> GameManager : utilizza
 RoundManager --> InputManager : utilizza
 
-MatchManager --> InputManager : utilizza
+MatchManager ..> InputManager : utilizza
 
-InputManager --> GameManager
+InputManager ..> GameManager
 
 note for GameManager "Possiede reference di quasi tutto"
 
@@ -69,7 +72,7 @@ UIScoreboard ..> MatchManager : si iscrive a >onPlayer1Score e >onPlayer2Score
 
 UIRoundAnimations ..> RoundManager : si iscrive a >...countdown
 
-UIMatchAnimations --> MatchManager : si iscrive a >MatchBegin e >MatchEnd <br/> <br/> Chiama MatchRestart
+UIMatchAnimations ..> MatchManager : si iscrive a >MatchBegin e >MatchEnd <br/> <br/> Chiama MatchRestart
 
 
 ```

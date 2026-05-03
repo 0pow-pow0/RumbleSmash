@@ -48,6 +48,13 @@ public class Ball : MonoBehaviour
 
         rb.linearVelocity = Vector2.zero;
         fsm.DirtySwitch(fsm.stage1);
+        spriteRenderer.gameObject.SetActive(true);
+
+        // ? --- Ricopia stateEnter poiche' chiamare lo stateEnter
+        // ? --- richiamerebbe l'evento associato, non lo vogliamo
+        spriteRenderer.color = Color.gray;   
+        rb.gravityScale = STAGE1_GRAVITY_SCALE;
+        rb.sharedMaterial = hardBounciness;
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
@@ -147,6 +154,10 @@ public class Ball : MonoBehaviour
 
     [NonSerialized]
     public UnityEvent onImpactFrameStart = new UnityEvent();
+    [NonSerialized]
+    public UnityEvent onImpactFrameEnd = new UnityEvent();
+    [NonSerialized]
+    public UnityEvent onBallScore = new UnityEvent();
     #endregion
 
     #region PhyisicsRelatedMethods
@@ -203,12 +214,12 @@ public class Ball : MonoBehaviour
     IEnumerator ImpactFramesRoutine(int framesToWait)
     {
         StopBallMovement();
-
+        onImpactFrameStart.Invoke();
         for(int i = 0; i < framesToWait; i++)
         {
             yield return null;
         }
-
+        onImpactFrameEnd.Invoke();
         StartBallMovement();
     }
 
@@ -242,6 +253,13 @@ public class Ball : MonoBehaviour
     {
         fsm = new BallFSM();
         fsm.Awake();
+
+        onBallScore.AddListener(
+            () =>
+            {
+                spriteRenderer.gameObject.SetActive(false);
+            }
+        );
     }
 
 

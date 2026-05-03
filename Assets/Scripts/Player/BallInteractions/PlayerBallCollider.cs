@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerBallCollider : MonoBehaviour
 {
+    Player plr;
     public int lastPowerImpressed;
     public Vector2 lastDirectionImpressedNormalized;
 
@@ -53,7 +54,13 @@ public class PlayerBallCollider : MonoBehaviour
             Ball bl =  other.GetComponentInParent<Ball>();
   
             bl.AddForce(lastDirectionImpressedNormalized, lastPowerImpressed);
-
+            
+            
+            plr.pbi.onBallHit.Invoke(new Vector2
+            (
+                bl.transform.position.x,
+                bl.transform.position.y
+            ));
 
             // ! --- Disattiva il collider dopo aver colliso con la palla
             StopCoroutine("ColliderTimer");
@@ -63,6 +70,7 @@ public class PlayerBallCollider : MonoBehaviour
 
     void Awake()
     {
+        plr = GetComponentInParent<Player>();
         numberOfFramesBeforeDeactivation =
             GetComponentInParent<PlayerBallInteractions>().
                 KICK_COLLIDER_FRAME_DURATION;

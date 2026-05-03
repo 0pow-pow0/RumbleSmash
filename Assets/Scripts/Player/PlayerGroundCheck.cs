@@ -11,6 +11,21 @@ public class PlayerGroundCheck : MonoBehaviour
         plr = GetComponentInParent<Player>();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
+        {
+            plr.isOnGround = true; 
+        }    
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
+        {
+            plr.isOnGround = false; 
+        }        
+    }
     private void OnTriggerStay2D(Collider2D other)
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("LevelCollider")

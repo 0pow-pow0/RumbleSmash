@@ -48,7 +48,8 @@ public class InputManagerLogic : MonoBehaviour
 
             //  GameManager.Get().player1.plrInp.
                 //DeactivateInput();
-
+            Player p = player.gameObject.GetComponent<Player>();
+            p.plrNumber = PlayerNumber.PLAYER_1;
             PowUtility.Log("Player 1 joined!", Color.blue);
             onPlayer1Joined.Invoke();
 
@@ -65,6 +66,9 @@ public class InputManagerLogic : MonoBehaviour
 
             GameManager.Get().player2.plrInp.
                 DeactivateInput();
+            
+            Player p = player.gameObject.GetComponent<Player>();
+            p.plrNumber = PlayerNumber.PLAYER_2;
 
             PowUtility.Log("Player 2 joined!", Color.yellow);
             onPlayer2Joined.Invoke();

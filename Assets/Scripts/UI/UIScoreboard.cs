@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Text.RegularExpressions;
 
 public class UIScoreboard : MonoBehaviour
 {
@@ -31,6 +32,23 @@ public class UIScoreboard : MonoBehaviour
         MatchManager.Get().onPlayer2Score.AddListener(
             SetPlayer2Points
         );
+
+        MatchManager.Get().onPreMatchAssignDevices.AddListener(
+            () =>
+            {
+                father.SetActive(true);
+            }
+        );
+
+        // ? --- Se bypassiamo l'assegnazione dei player, in ogni caso
+        // ? --- la scoreboard compare.
+        MatchManager.Get().onMatchBegin.AddListener(
+            () =>
+            {
+                father.SetActive(true);
+            }
+        );
+
 
         SetPlayer1Points(0);
         SetPlayer2Points(0);

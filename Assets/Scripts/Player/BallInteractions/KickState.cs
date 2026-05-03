@@ -49,10 +49,14 @@ public class KickState : BaseState
             // Torna in stato di AWAIT  
             // Attiva Events
             
+            p.pbi.plr.rb.AddForce
+                (p.pbi.plr.directionLastInput * p.pbi.KICK_FORCE_PUSH);
+
             p.SwitchState(p.awaitState);
             p.pbi.onKickEnd.Invoke();
-
+    
             // TODO --- Attiva collider e passando le forze fisiche necessarie
+    
             p.pbi.plr.ballCollider.Activate
             (
                 p.pbi.KICK_FORCE,

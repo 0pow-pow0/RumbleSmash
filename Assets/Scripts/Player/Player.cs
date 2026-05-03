@@ -15,15 +15,26 @@ public enum PlayerNumber
 public class Player : MonoBehaviour
 {
     [field: SerializeField, EditorAttributes.ReadOnly]
-    public PlayerNumber plrNumber { get; private set; } = new();
+    public PlayerNumber plrNumber { get; set; } = new();
 
     [Header("References")]
     [field: SerializeField] 
+    public PlayerBallInteractions pbi; 
+    [field: SerializeField] 
+    public PlayerJump pj;
+    [field: SerializeField] 
     public Rigidbody2D rb { get; private set; }
+    [field: SerializeField] 
+    public SpriteRenderer sprite { get; private set; }
+
+
+    [field: SerializeField]
+    public GameObject pivotRotationBasedCollider { get; private set;}
     [field: SerializeField]  
     public GameObject pivotArrowRotation { get; private set; }
     [field: SerializeField]
     public GameObject pivotSpriteColl { get; private set; }
+
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
     [field: NonSerialized] 
@@ -36,12 +47,19 @@ public class Player : MonoBehaviour
     [SerializeField] public float SPEED;
     [SerializeField] public float FALL_SPEED;
     [SerializeField] public float FALL_SPEED_ON_INPUT;
+    // ? --- Velocita' con cui si ferma quando viene interrotto
+    // ? --- il movimento per cause esterne.
+    // ? --- Sara' la t di un lerp.
+    [SerializeField] public float STOP_SPEED;
 
-    [FoldoutGroup("Flags", nameof(isOnGround), nameof(canMove))]
+    [FoldoutGroup("Flags", nameof(isOnGround), nameof(canMove),
+    nameof(isFacingRight))]
     
     [SerializeField] private EditorAttributes.Void flagsHolder;
     [SerializeField, HideProperty, ReadOnly] public bool isOnGround;
-    [SerializeField, HideProperty, ReadOnly] private bool canMove = true;
+    // ? --- Teoricamente posso rimuoverla
+    [SerializeField, HideProperty, ReadOnly] public bool canMove = true;
+    [SerializeField, HideProperty, ReadOnly] public bool isFacingRight = false;
     #endregion
 
 
@@ -64,8 +82,8 @@ public class Player : MonoBehaviour
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    [NonSerialized] public UnityEvent OnPlayerMove = new();
-
+    [NonSerialized] public UnityEvent onPlayerMoveEnd = new();
+    [NonSerialized] public UnityEvent onPlayerMoveStart = new();
 
     public InputAction moveInput { get; private set; }
     public InputAction jumpInput { get; private set; }
@@ -95,17 +113,23 @@ public class Player : MonoBehaviour
 
     //TODO: Si potrebbe linkare al playerInput, ma
     // bisogna modificarlo
+    private bool hasStartedMoving = false;
     void MovementLogic()
     { 
         Vector2 movementInputValue = 
             plrInp.actions.
                 FindAction("Move").ReadValue<Vector2>();
-
+        
         if(!canMove)
+        {
             return;
-
+        } 
         if(movementInputValue == Vector2.zero)
         {
+            if(hasStartedMoving)
+                onPlayerMoveEnd.Invoke();
+
+            hasStartedMoving = false;
             // ? --- Resetta asse X, l'unica che ci interessa
             // ? --- Visto che la Y la gestira' il rigidbody per cazzi suoi
             rb.linearVelocity = new Vector2
@@ -117,8 +141,15 @@ public class Player : MonoBehaviour
             // ? --- WHY: serve arrivarea agli altri check
             //return;
         }
+        else
+        {
+            if(!hasStartedMoving)
+                onPlayerMoveStart.Invoke();
 
-        
+            hasStartedMoving = true;
+        }
+
+
 
         // ? --- Evita che premendo il tasto W si voli
         if(movementInputValue.y > 0f)
@@ -149,8 +180,6 @@ public class Player : MonoBehaviour
                 SPEED * movementInputValue.x,
                 rb.linearVelocity.y
             );
-
-        OnPlayerMove.Invoke();
     }
     
     /// <summary>
@@ -160,6 +189,7 @@ public class Player : MonoBehaviour
     public void DisableMovement()
     {
         canMove = false;
+
         // ? --- Se disabilitiamo l'input mentre il player
         // ? --- utilizza la "FAST FALL" rimarrebbe lockata in quel modo.
         rb.gravityScale = FALL_SPEED;
@@ -209,6 +239,34 @@ public class Player : MonoBehaviour
                 pivotArrowRotation.transform.localEulerAngles.z
             ));
     }
+    
+    /// <summary>
+    /// Ruota i pivot dei collider in base
+    /// alla direzione che si sta puntando.
+    /// </summary>
+    public void AdjustRotationBasedColliders()
+    {
+        if(directionLastInput == Vector2.zero)
+            return;
+
+        // ? --- Angolo fra l'origine del mondo e l'asse di input.
+        // ? --- Entrambi sono normalizzati.
+        float angleBetween =
+            Vector2.SignedAngle
+            (
+                Vector2.right,
+                directionLastInput
+            ); 
+        
+        // ? --- Chiaramente ci interessa solo la rotazione sulla z
+        // ? --- la quale coinvolge gli assi X e Y.
+        pivotRotationBasedCollider.transform.localRotation =
+            Quaternion.Euler(
+                0f,
+                0f,
+                angleBetween
+            );
+    }
 
     public void ResetSpriteAndCollRotation()
     {
@@ -220,6 +278,38 @@ public class Player : MonoBehaviour
                 0f
             ));
     }
+
+    /// <summary>
+    /// Specchia il player verso una direzione in base all'input.
+    /// In questo momento si basa solo su destra e sinistra.
+    /// </summary>
+    public void AdjustSpriteBasedOnDirection()
+    {
+        Vector2 inputDirection = 
+            moveInput.ReadValue<Vector2>();
+
+        if(inputDirection.x > 0)
+        {
+            isFacingRight = true;
+            sprite.gameObject.transform.localScale = 
+                new Vector3(
+                    Mathf.Abs(sprite.transform.localScale.x),
+                    sprite.transform.localScale.y,
+                    sprite.transform.localScale.z
+                );
+        }
+        else if(inputDirection.x < 0)
+        {
+            isFacingRight = false;
+            sprite.gameObject.transform.localScale = 
+                new Vector3( 
+                    -Mathf.Abs(sprite.transform.localScale.x),
+                    sprite.transform.localScale.y,
+                    sprite.transform.localScale.z
+                );
+        }
+    }
+    
 
     #endregion
 
@@ -242,13 +332,48 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-            if(moveInput.ReadValue<Vector2>() != Vector2.zero)
+        if(moveInput.ReadValue<Vector2>() != Vector2.zero)
         {
             directionLastInput = moveInput.ReadValue<Vector2>();
         }
 
-        MovementLogic();
-        FeedBackArrowMovement();
+        if((pbi.fsm.kickState.isActive ||
+            pbi.fsm.chargingState.isActive) || 
+            pj.doppioScattoPerforming)
+        {
+            DisableMovement();
+        }
+        //else if((pj.firstJumpPerforming || pj.doppioScattoPerforming))
+        //{
+        //    DisableMovement();
+        //}
+        else
+        {
+            EnableMovement();
+            AdjustSpriteBasedOnDirection();
+            AdjustRotationBasedColliders(); 
+        }
+        
+        // ? --- Se no, quando si disabilita' il movimento
+        // ? --- continua a traslare all'infinito poiche'
+        // ? --- non viene resettata la velocita' lineare.
+        // ? --- In questo modo la scalo senza dare l'effetto 
+        // ? --- di stop repentino.
+        if(!canMove)
+        {
+            if(rb.linearVelocityX == 0)
+                return;
+            
+            float result = 
+                Mathf.Lerp(rb.linearVelocity.x, 0, 0.02f);
+
+            rb.linearVelocity = new Vector2(
+                result, 
+                rb.linearVelocity.y 
+            );
+        }
+ 
+            FeedBackArrowMovement();
     }
 
 
@@ -256,6 +381,6 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
+        MovementLogic();
     }
 }
