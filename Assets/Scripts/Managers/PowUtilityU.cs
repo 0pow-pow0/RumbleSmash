@@ -52,7 +52,28 @@ public class PowUtilityU : MonoBehaviour
             yield return null;
         }
     }
+    
+    public void RepeatActionForFrame(
+        Action action,
+        int frameDuration
+    )
+    {
+        StartCoroutine(RepeatActionForFrameRoutine(action, frameDuration));
+    }
 
+    private IEnumerator RepeatActionForFrameRoutine(
+        Action action,
+        int frameDuration)
+    {
+        int framesSinceStart = 0;
+ 
+        while (framesSinceStart <= frameDuration)
+        {
+            action.Invoke();
+            yield return null;
+            framesSinceStart++;
+        }
+    }
     // -------------------------------------------
     // ! Color related
     // -------------------------------------------

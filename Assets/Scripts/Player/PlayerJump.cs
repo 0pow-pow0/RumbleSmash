@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using EditorAttributes;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Quando il giocatore effettua il salto si muovera' di 
@@ -13,18 +14,24 @@ public class PlayerJump : MonoBehaviour
 
     [Header("Gameplay Stats")]
     // ? --- Gestione del doppioScatto
-    [SerializeField] public float JUMP_FORCE;
-    [SerializeField] public float DOPPIOSCATTO_FORCE;    
+    [field: SerializeField] 
+    public float JUMP_FORCE { get; private set; }
+
+    [field: SerializeField] 
+    public float DOPPIOSCATTO_FORCE { get; private set; }    
 
     // ? --- Il doppioScatto si interrompera' dopo X metri percorsi
     private float distanceTravelledDoppioScatto;
-    [SerializeField] public float DOPPIOSCATTO_MAX_DISTANCE;
+    [field: SerializeField] 
+    public int DOPPIOSCATTO_FRAME_DURATION { get; private set; }
     
 
 
     //[Header("Flags")]
     [FoldoutGroup("Flags", nameof(firstJumpPerformed), nameof(firstJumpPerforming),
-         nameof(doppioScattoPerformed),  nameof(doppioScattoPerforming))]
+         nameof(doppioScattoPerformed),  nameof(doppioScattoPerforming),
+         nameof(canPerformJustPressedJumpInputEvent), 
+         nameof(canPerformJustPressedReleaseEvent))]
 
     [SerializeField] private EditorAttributes.Void flagsHolder;
 
@@ -43,25 +50,74 @@ public class PlayerJump : MonoBehaviour
     // ? --- la variabile si resetta.
     [SerializeField, ReadOnly, HideProperty] public bool doppioScattoPerforming;
 
+    // ? --- Usato per triggherare i particellare nei punti giusti
+    [SerializeField, ReadOnly, HideProperty] 
+    public Vector2 doppioScattoDirection;
+
+    /// <summary>
+    /// Il motivo per cui queste varibili esistono e' dovuto al fatto che
+    /// il retrieve dell'input avviene negli UPDATE, ma siccome al
+    /// ricevimento dell'input io dovrei modificare la linearvelocity e
+    /// questo puo' avvenire solo nell'fixedUpdate ne'
+    /// consegue che input retrival e azione avvengono in due momenti opposti.
+    /// 
+    /// Dunque queste variabili vengono settate nell'update 
+    /// e lette nel fixed, dove modifichero' la linearVel.
+    /// 
+    /// Vengono resettate nell'EvaluatePhysics
+    /// </summary>
+    [SerializeField, ReadOnly, HideProperty] 
+    bool canPerformJustPressedJumpInputEvent = false;
+    [SerializeField, ReadOnly, HideProperty] 
+    bool canPerformJustPressedReleaseEvent = false;
 
 
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    UnityEvent onFirstJumpPerformed = new();
-    UnityEvent onDoppioScattoPerformed = new();
+    [NonSerialized]
+    public UnityEvent onFirstJumpPerformed = new();
+    [NonSerialized]
+    public UnityEvent onLand = new();
+    [NonSerialized]
+    public UnityEvent onDoppioScattoStarted = new();
+    [NonSerialized]
+    public UnityEvent onDoppioScattoEnd = new();
 
     // ? --- Potrei anche fare dei metodi che si richiamano fino a che
     // ? --- non si termina uno dei due salti
 
 
-    void InputLogic()
+    void InputRetrieve()
     {
+
+
         if(!plr.plrInp.inputIsActive)
             return;
 
         if(plr.jumpInput.WasPerformedThisFrame())
         {
+            canPerformJustPressedJumpInputEvent = true;
+            canPerformJustPressedReleaseEvent = false;
+        }
+    
+        if(plr.jumpInput.WasReleasedThisFrame() &&
+            // ? --- Solo se stiamo gia' volando     
+            firstJumpPerforming
+            )
+        {
+            canPerformJustPressedReleaseEvent = true;
+        }
+    } 
+
+    void EvaluatePhysics()
+    {
+        if(!plr.plrInp.inputIsActive)
+            return;
+
+        if(canPerformJustPressedJumpInputEvent)
+        {
+            canPerformJustPressedJumpInputEvent = false;
             //Debug.Log("InputArrivato");
             Vector2 moveInputValue = 
                 plr.moveInput.ReadValue<Vector2>();
@@ -106,7 +162,6 @@ public class PlayerJump : MonoBehaviour
                 // ! --- verso l'alto.
                 Vector2 doppioScattoValue = moveInputValue;
                 frameDur = 0 ;
-                
                 if(doppioScattoValue == Vector2.zero)
                     doppioScattoValue = new Vector2(0f, 1f);
 
@@ -119,11 +174,11 @@ public class PlayerJump : MonoBehaviour
                 plr.moveInput.Disable();
 
 
-                onDoppioScattoPerformed.Invoke();
-            }
+                doppioScattoDirection = doppioScattoValue;
+                onDoppioScattoStarted.Invoke();
         }
     
-        if(plr.jumpInput.WasReleasedThisFrame() &&
+        if(canPerformJustPressedReleaseEvent &&
             // ? --- Solo se stiamo gia' volando     
             firstJumpPerforming
             )
@@ -134,14 +189,17 @@ public class PlayerJump : MonoBehaviour
                 plr.rb.linearVelocity.x,
                 0f
             );
+
+            canPerformJustPressedReleaseEvent = false;
         }
     } 
+    }
 
     /// <summary>
     /// ? Controlla che tutte le condizioni siano vere
     /// ? in caso contrario setta le flag
     /// </summary>
-    void FirstJumpLogic()
+    void FirstJumpUpdate()
     {
         if(plr.rb.linearVelocity.y < 0)
         {
@@ -167,7 +225,7 @@ public class PlayerJump : MonoBehaviour
             if(
                 frameDur 
                 >= 
-                DOPPIOSCATTO_MAX_DISTANCE 
+                DOPPIOSCATTO_FRAME_DURATION 
                 ||
                 // ? --- Se si ferma contro un ostacolo 
                 plr.rb.linearVelocity == Vector2.zero)
@@ -184,11 +242,12 @@ public class PlayerJump : MonoBehaviour
                 //{
                 //    plr.EnableMovement();
                 //}
-
+                onDoppioScattoEnd.Invoke();
                 distanceTravelledDoppioScatto = 0f;
                 plr.rb.linearVelocity = Vector2.zero;
                 plr.rb.gravityScale = 1f;
                 plr.moveInput.Enable();
+                doppioScattoDirection = Vector2.zero;
             }
         }
     }
@@ -208,19 +267,27 @@ public class PlayerJump : MonoBehaviour
 
     void Update()
     {
-        //if(plr.plrInp.inputIsActive)
         if(!plr.pbi.fsm.kickState.isActive &&
             !plr.pbi.fsm.chargingState.isActive)
         {
-            InputLogic();
+            InputRetrieve();
         }
 
-        FirstJumpLogic();
+        /// Ho aumentato il numero delle chiamate del FixedUpdate
+        /// in modo che sia piu' preciso, questo toglie il problema 
+        /// del tunneling. 
+        /// 
+        /// Mettendo questa funzione dentro il fixedUpdate, si bugga
+        /// la chiamata degli eventi dei particellari per questioni di timing.
+        /// Per ora, dunque, lo lascio qui, visto che alla fine,
+        /// non causava tunneling
+        EvaluatePhysics();
         //DoppioScattoLogic();
     }
 
     void FixedUpdate()
     {
+        FirstJumpUpdate();
         DoppioScattoLogic();
     }
 }

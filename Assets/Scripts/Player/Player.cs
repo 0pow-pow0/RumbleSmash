@@ -3,6 +3,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using EditorAttributes;
+using UnityEngine.AI;
+using UnityEditor.Rendering;
+using NUnit.Framework;
 
 
 [System.Serializable]
@@ -37,6 +40,7 @@ public class Player : MonoBehaviour
 
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
+
     [field: NonSerialized] 
     public PlayerInput plrInp { get; private set; }
     
@@ -113,23 +117,75 @@ public class Player : MonoBehaviour
 
     //TODO: Si potrebbe linkare al playerInput, ma
     // bisogna modificarlo
-    private bool hasStartedMoving = false;
+
+    // ? --- TODO: Ci vuole una lunga spiegazione
+    /// <summary>
+    /// Quando il player cambia direzione l'input si setta a 0,
+    /// per evitare che gli eventi si triggherino ad ogni cambio di direzione
+    /// CHE PERO' non rappresenta l'azione di fermarsi, necessiatiamo di 
+    /// questa variabile
+    /// </summary>
+    int movementSteerFrameTolerance;
+    const int MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE = 4;
+    bool hasEnded = false;
+    bool hasStarted = false;
+
+    // ? --- La parte peggiore del mio codice, rip
     void MovementLogic()
     { 
         Vector2 movementInputValue = 
             plrInp.actions.
                 FindAction("Move").ReadValue<Vector2>();
         
+        
         if(!canMove)
         {
             return;
         } 
+
+
+
+        // -------------------------------------------
+        // ! Movement events
+        // -------------------------------------------
+        // ? --- Un bordello lol
         if(movementInputValue == Vector2.zero)
         {
-            if(hasStartedMoving)
-                onPlayerMoveEnd.Invoke();
+            movementSteerFrameTolerance++;
+        } 
+        // ? --- Ogni qual volta siamo in movimento
+        else
+        {
+            movementSteerFrameTolerance = 0;
+            //hasStarted = false;
+            hasEnded = false; 
+        }
 
-            hasStartedMoving = false;
+
+
+        if(movementInputValue == Vector2.zero 
+            && movementSteerFrameTolerance >= 
+                MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE
+            && !hasEnded)
+        {
+            onPlayerMoveEnd.Invoke();
+            Debug.Log("Ended");
+            hasEnded = true;
+            hasStarted = false;
+        }
+
+        if(movementInputValue != Vector2.zero
+            && !hasStarted)
+        {
+            hasStarted = true;
+            onPlayerMoveStart.Invoke();
+        }
+
+
+
+
+        if(movementInputValue == Vector2.zero)
+        {
             // ? --- Resetta asse X, l'unica che ci interessa
             // ? --- Visto che la Y la gestira' il rigidbody per cazzi suoi
             rb.linearVelocity = new Vector2
@@ -140,13 +196,6 @@ public class Player : MonoBehaviour
 
             // ? --- WHY: serve arrivarea agli altri check
             //return;
-        }
-        else
-        {
-            if(!hasStartedMoving)
-                onPlayerMoveStart.Invoke();
-
-            hasStartedMoving = true;
         }
 
 
@@ -200,7 +249,6 @@ public class Player : MonoBehaviour
         canMove = true;
     }
     
-
 
     /// <summary>
     /// Describes the movement of the feedback arrow

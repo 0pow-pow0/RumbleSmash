@@ -31,8 +31,14 @@ public class MatchManager : MonoBehaviour
     // ! Events
     // -------------------------------------------
     // ! --- Match Related
+
+    // ? --- Servira' alla ui per capire quando far comparire
+    // ? --- la schermata di prematch
     [NonSerialized]
-    public UnityEvent onPreMatchShowRivals = new();
+    public UnityEvent<float> onPreMatchShowRivals = new();
+    
+    [field: SerializeField]
+    public float preMatchShowRivalsDuration { get; private set; }
 
     [NonSerialized]
     public UnityEvent onPreMatchAssignDevices = new();
@@ -53,12 +59,25 @@ public class MatchManager : MonoBehaviour
 
     [NonSerialized]
     public UnityEvent onMatchBegin = new();
+
+    /// <summary>
+    /// Routine completa di inizio round PER LA PRIMA VOLTA
+    /// (ovvero, non ho riavviato il match)
+    /// </summary>
+    /// Protezione da restart coroutiune non necessaria.
     public void MatchBegin()
+    {
+        StartCoroutine(MatchBeginRoutine());
+    }
+
+    private IEnumerator MatchBeginRoutine()
     {
         PowUtility.Log("Match: BeginningMatch", Color.cyan);
 
         //AssignPlayers();
-        
+        onPreMatchShowRivals.Invoke(preMatchShowRivalsDuration);
+        yield return new WaitForSeconds(preMatchShowRivalsDuration);
+
 
         onMatchBegin.Invoke();
     }
@@ -94,7 +113,11 @@ public class MatchManager : MonoBehaviour
     {
         PowUtility.Log("Match: Restarting!", Color.cyan);
 
-        MatchBegin(); // xD
+
+        // ? --- TODO: teoricamente non dovrei usarla
+        // ? --- ma siccome dovrei reiscrivere la UI all'evento
+        // ? --- onMatchRestart mi rompo il cazzo e lo faccio.
+        onMatchBegin.Invoke();
 
         player1Score = 0;
         player2Score = 0;
