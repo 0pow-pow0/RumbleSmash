@@ -31,6 +31,10 @@ public class MatchManager : MonoBehaviour
     // ! Events
     // -------------------------------------------
     // ! --- Match Related
+    // ? --- Flag per evitarmi di riavviare 12 volte
+    // ? --- per cambiare una riga di codice 
+    [SerializeField]
+    private bool areWeTesting;
 
     // ? --- Servira' alla ui per capire quando far comparire
     // ? --- la schermata di prematch
@@ -74,9 +78,11 @@ public class MatchManager : MonoBehaviour
     {
         PowUtility.Log("Match: BeginningMatch", Color.cyan);
 
-        //AssignPlayers();
-        onPreMatchShowRivals.Invoke(preMatchShowRivalsDuration);
-        yield return new WaitForSeconds(preMatchShowRivalsDuration);
+        if(!areWeTesting)
+        {
+            onPreMatchShowRivals.Invoke(preMatchShowRivalsDuration);
+            yield return new WaitForSeconds(preMatchShowRivalsDuration);            
+        }
 
 
         onMatchBegin.Invoke();

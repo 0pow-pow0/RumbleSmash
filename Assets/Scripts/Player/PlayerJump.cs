@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using EditorAttributes;
-using Unity.VisualScripting;
+using UtilityShit;
 
 /// <summary>
 /// Quando il giocatore effettua il salto si muovera' di 
@@ -12,19 +12,23 @@ public class PlayerJump : MonoBehaviour
 {
     [SerializeField] Player plr;
 
-    [Header("Gameplay Stats")]
+    #region Gameplay Stats
     // ? --- Gestione del doppioScatto
-    [field: SerializeField] 
+    [field: Header("Gameplay Stats"), SerializeField] 
     public float JUMP_FORCE { get; private set; }
 
     [field: SerializeField] 
     public float DOPPIOSCATTO_FORCE { get; private set; }    
 
-    // ? --- Il doppioScatto si interrompera' dopo X metri percorsi
-    private float distanceTravelledDoppioScatto;
+    // ? --- Il doppioScatto si interrompera' dopo X frame
     [field: SerializeField] 
     public int DOPPIOSCATTO_FRAME_DURATION { get; private set; }
     
+    [field: SerializeField] 
+    public float DOPPIOSCATTO_COOLDOWN_DURATION { get; private set; }
+    private Timer doppioScattoCooldownTimer;
+    
+    #endregion
 
 
     //[Header("Flags")]
@@ -33,26 +37,35 @@ public class PlayerJump : MonoBehaviour
          nameof(canPerformJustPressedJumpInputEvent), 
          nameof(canPerformJustPressedReleaseEvent))]
 
-    [SerializeField] private EditorAttributes.Void flagsHolder;
+    [SerializeField]
+    private EditorAttributes.Void flagsHolder;
 
     // ? --- Serve per sapere se e' gia' stato effettuato il primo salto
-    [SerializeField, ReadOnly, HideProperty] public bool firstJumpPerformed;
+    [SerializeField, ReadOnly, HideProperty]
+    public bool firstJumpPerformed;
+    
     // ? --- Serve per sapere se stiamo PERFORMANDO il salto
-    [SerializeField, ReadOnly, HideProperty] public bool firstJumpPerforming;
+    [SerializeField, ReadOnly, HideProperty]
+    public bool firstJumpPerforming;
     [Space]
+    
     // ? --- Stessa cosa ma per il doppioScatto
-    [SerializeField, ReadOnly, HideProperty] public bool doppioScattoPerformed;
+    [SerializeField, ReadOnly, HideProperty]
+    public bool doppioScattoPerformed;
 
     // ? --- La differenza tra questo e' "doppioScattoPerformed" e'
     // ? --- che non dipende dai check fatti col ground.
     // ? --- Questa variabile gestisce solo i calcoli applicati al movimento,
     // ? --- una volta raggiunta la "DOPPIOSCATTO_MAX_DISTANCE",
     // ? --- la variabile si resetta.
-    [SerializeField, ReadOnly, HideProperty] public bool doppioScattoPerforming;
+    [SerializeField, ReadOnly, HideProperty]
+    public bool doppioScattoPerforming;
 
     // ? --- Usato per triggherare i particellare nei punti giusti
     [SerializeField, ReadOnly, HideProperty] 
     public Vector2 doppioScattoDirection;
+
+
 
     /// <summary>
     /// Il motivo per cui queste varibili esistono e' dovuto al fatto che
@@ -68,6 +81,7 @@ public class PlayerJump : MonoBehaviour
     /// </summary>
     [SerializeField, ReadOnly, HideProperty] 
     bool canPerformJustPressedJumpInputEvent = false;
+    
     [SerializeField, ReadOnly, HideProperty] 
     bool canPerformJustPressedReleaseEvent = false;
 
@@ -75,19 +89,20 @@ public class PlayerJump : MonoBehaviour
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
+    #region Events
     [NonSerialized]
     public UnityEvent onFirstJumpPerformed = new();
     [NonSerialized]
     public UnityEvent onLand = new();
     [NonSerialized]
-    public UnityEvent onDoppioScattoStarted = new();
+    public UnityEvent onDoppioScattoStart = new();
     [NonSerialized]
     public UnityEvent onDoppioScattoEnd = new();
+    #endregion
+
 
     // ? --- Potrei anche fare dei metodi che si richiamano fino a che
     // ? --- non si termina uno dei due salti
-
-
     void InputRetrieve()
     {
 
@@ -101,11 +116,9 @@ public class PlayerJump : MonoBehaviour
             canPerformJustPressedReleaseEvent = false;
         }
     
-        if(plr.jumpInput.WasReleasedThisFrame() &&
-            // ? --- Solo se stiamo gia' volando     
-            firstJumpPerforming
-            )
+        if(plr.jumpInput.WasReleasedThisFrame())
         {
+            
             canPerformJustPressedReleaseEvent = true;
         }
     } 
@@ -145,11 +158,13 @@ public class PlayerJump : MonoBehaviour
             // ? --- DoppioScatto
             else if(!doppioScattoPerformed
                 // ? --- Se stai gia' performando il salto, non entrare 
-                && !doppioScattoPerforming )
+                && !doppioScattoPerforming 
+                && doppioScattoCooldownTimer.HasEnded())
             {
                 firstJumpPerforming = false;
                 doppioScattoPerformed = true;
                 doppioScattoPerforming = true;
+                doppioScattoCooldownTimer.Restart();
                 plr.DisableMovement();
                 
                 // ? --- Visto che possiamo saltare in tutte
@@ -175,24 +190,34 @@ public class PlayerJump : MonoBehaviour
 
 
                 doppioScattoDirection = doppioScattoValue;
-                onDoppioScattoStarted.Invoke();
-        }
-    
+                onDoppioScattoStart.Invoke();
+            }
+            
+            
+        }   
+            
         if(canPerformJustPressedReleaseEvent &&
             // ? --- Solo se stiamo gia' volando     
             firstJumpPerforming
             )
         {
             firstJumpPerforming = false;
-            plr.rb.linearVelocity = new Vector2
-            (
-                plr.rb.linearVelocity.x,
-                0f
-            );
+            // plr.rb.linearVelocity = new Vector2
+            // (
+            //     plr.rb.linearVelocity.x,
+            //     0f
+            // );
 
-            canPerformJustPressedReleaseEvent = false;
+            Vector2 lerpedSpeedToZero = 
+                Vector2.Lerp(plr.rb.linearVelocity, 
+                new Vector2(plr.rb.linearVelocity.x, 0f), 0.7f);
+
+            plr.rb.linearVelocity = lerpedSpeedToZero;
+
+            if(plr.rb.linearVelocityX == 0f)
+                canPerformJustPressedReleaseEvent = false;
+            // canPerformJustPressedReleaseEvent = false;
         }
-    } 
     }
 
     /// <summary>
@@ -213,15 +238,8 @@ public class PlayerJump : MonoBehaviour
     {
         if(doppioScattoPerforming)
         {
-            Debug.Log("Magnitude: " + plr.rb.linearVelocity.magnitude); 
-            distanceTravelledDoppioScatto += 
-                plr.rb.linearVelocity.magnitude;        
             frameDur++;
             
-            //Debug.Log("Speed: " + plr.rb.linearVelocity 
-                //+ " " + distanceTravelledDoppioScatto);
-
-
             if(
                 frameDur 
                 >= 
@@ -243,7 +261,6 @@ public class PlayerJump : MonoBehaviour
                 //    plr.EnableMovement();
                 //}
                 onDoppioScattoEnd.Invoke();
-                distanceTravelledDoppioScatto = 0f;
                 plr.rb.linearVelocity = Vector2.zero;
                 plr.rb.gravityScale = 1f;
                 plr.moveInput.Enable();
@@ -263,10 +280,14 @@ public class PlayerJump : MonoBehaviour
 
     void Awake()
     {
+        doppioScattoCooldownTimer = new 
+            Timer(DOPPIOSCATTO_COOLDOWN_DURATION);
     }
 
     void Update()
     {
+        doppioScattoCooldownTimer.UpdateTime();
+
         if(!plr.pbi.fsm.kickState.isActive &&
             !plr.pbi.fsm.chargingState.isActive)
         {

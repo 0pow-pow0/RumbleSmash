@@ -32,12 +32,6 @@ namespace Managers {
 }
 
 
-
-
-Goal ..> MatchManager : Trigghera' evento di score
-
-Goal ..> GameManager : Trigghera' evento di score di BALL
-
 MatchManager --> RoundManager : gestisce
 MatchManager ..> GameManager : utilizza
 
@@ -52,27 +46,7 @@ note for GameManager "Possiede reference di quasi tutto"
 
 note for RoundManager "Sarebbe meglio che facesse <br/> parte di MatchManager per composizione"
 
-%% ------------- UI
-namespace UI {
-    class UIScoreboard {
-        
-    }
 
-    class UIRoundAnimations {
-
-    }
-    
-   
-
-    class UIMatchAnimations {
-
-    }
-}
-UIScoreboard ..> MatchManager : si iscrive a >onPlayer1Score e >onPlayer2Score
-
-UIRoundAnimations ..> RoundManager : si iscrive a >...countdown
-
-UIMatchAnimations ..> MatchManager : si iscrive a >MatchBegin e >MatchEnd <br/> <br/> Chiama MatchRestart
 
 
 ```

@@ -1,4 +1,6 @@
 using System;
+using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEditor.Build;
 using UnityEngine;
 
@@ -8,10 +10,12 @@ public class PlayerParticleManager : MonoBehaviour
     ParticleSystem ballHit;
     [SerializeField]
     Animator playerEffects;
+
     [SerializeField, Space(15)]
     SpriteRenderer runStartSprite;
     [SerializeField]
     SpriteRenderer runEndSprite;
+
     [SerializeField, Space(15)]
     SpriteRenderer jumpStartSprite;
     [SerializeField]
@@ -22,11 +26,29 @@ public class PlayerParticleManager : MonoBehaviour
     [field: SerializeField] 
     public TrailRenderer[] dashTrails { get; private set; }
 
+    [field: Space(15), SerializeField] 
+    public ParticleSystem oldchargeStart;
+    [SerializeField]
+    public GameObject chargeStart;
+    [SerializeField]
+    public SpriteRenderer chargeStartSprite;
+
+    [field: SerializeField]
+    public ParticleSystem chargEnd { get; private set; }
+
+
+
     Player plr;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         plr = GetComponentInParent<Player>();
+
+        // ? --- Praticamente e' per evitare il problema di quando voglio 
+        // ? --- posizionare dei particellare in un punto,
+        // ? --- pero' se fosser child del player si muoverebbero con lui
+        // ? --- Non so se sia la roba migliore xDDDDDDDDDDD
+
         transform.SetParent(GlobalParticleManagerPow.Get().transform);
         transform.position = Vector3.zero;
         
@@ -166,7 +188,7 @@ public class PlayerParticleManager : MonoBehaviour
             }
         );
 
-        plr.pj.onDoppioScattoStarted.AddListener(
+        plr.pj.onDoppioScattoStart.AddListener(
             () =>
             {
                 dashTrailsFather.transform.position = 
@@ -211,6 +233,127 @@ public class PlayerParticleManager : MonoBehaviour
                     tr.emitting = false;
                     
                 }
+            }
+        );
+    
+    
+        plr.pbi.onChargeStart.AddListener(
+            () =>
+            {
+                // oldchargeStart.gameObject.transform.position =
+                //     new Vector3(
+                //         plr.sprite.bounds.center.x + 
+                //         plr.sprite.bounds.extents.x,
+                        
+                //         plr.sprite.bounds.center.y +
+                //         plr.sprite.bounds.extents.y,
+                //         0f
+                //     );
+
+                // oldchargeStart.Play();
+                
+                chargeStart.gameObject.SetActive(true);
+                chargeStart.transform.localRotation = Quaternion.identity;
+                chargeStartSprite.color = Color.white;
+
+                // ? --- Un po' troppe coroutine
+
+                chargeStart.transform.SetParent(plr.transform, false);
+
+                chargeStart.gameObject.transform
+                .DOScale(new Vector3(1.2f, 1.2f, 1f), 0.2f)
+                .OnComplete(
+                    () =>
+                    {
+                        chargeStart.gameObject.transform
+                        .DOScale(
+                            new Vector3(0.7f, 0.7f, 1f), 
+                            0.1f
+                        )
+                        .OnComplete(
+                            () =>
+                            {
+                                chargeStartSprite.color =
+                                    new Color(
+                                        chargeStartSprite.color.r,
+                                        chargeStartSprite.color.g,
+                                        chargeStartSprite.color.b,
+                                        0.3f
+                                    );
+
+                                chargeStartSprite
+                                .DOFade
+                                (
+                                    1f, 
+                                    plr.pbi.TIME_TO_REACH_MAX_CHARGE - 0.2f
+                                );
+                            }
+                        );  
+
+                        // chargeStart.gameObject.transform
+                        // .DORotate
+                        // (
+                        //     new Vector3(0f, 0f, 360f),
+                        //     // ? --- 0.2 perche' lo scale provoca questo delay
+                        //     plr.pbi.TIME_TO_REACH_MAX_CHARGE - 0.2f, 
+                        //     RotateMode.Fast
+                        // )
+                        // .SetLoops(-1, LoopType.Incremental);
+                        
+                    });
+                
+
+
+            }
+        );
+
+        plr.pbi.onChargeEnd.AddListener(
+            () =>
+            {
+                Debug.Log("Ended");
+                chargeStart.transform.DOKill();
+                
+                // chargeStart.transform.
+                // DOShakePosition
+                // (
+                //     0.3f,
+                //     new Vector3(0.1f, 0.1f, 0f),
+                //     1  
+                // )
+                // .SetLoops(-1, LoopType.Restart);
+
+                chargeStart.gameObject.transform
+                .DOScale
+                (
+                    new Vector3(1.4f, 1.4f, 1f),
+                    0.1f
+                ).OnComplete(
+                    () =>
+                    {
+                        chargeStart.gameObject.transform
+                        .DOScale
+                        (
+                            new Vector3(1.2f, 1.2f, 1f),
+                            0.1f
+                        ).SetLoops(-1, LoopType.Yoyo);
+                    }
+                );
+
+            }
+        );
+
+        plr.pbi.onKickEnd.AddListener(
+            () =>
+            {
+                // ? --- La funzione onKickEnd viene chiamata sia a fine
+                // ? --- charge, se stiamo caricando,
+                // ? --- sia a fine kick, anche se non stiamo chargando.
+                // ? --- In ogni caso, dunque, io resetto le risorse del charge.
+                Debug.Log("PiselloChargeEnd");
+                chargeStart.transform.DOKill();
+                chargeStartSprite.DOKill();
+                chargeStart.SetActive(false); 
+                chargeStart.transform.SetParent(playerEffects.transform, false);
             }
         );
     }

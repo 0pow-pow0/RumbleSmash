@@ -21,6 +21,11 @@ public class Ball : MonoBehaviour
     [field: SerializeField]
     public SpriteRenderer spriteRenderer { get; private set; }
     
+    [field: SerializeField]
+    public GameObject mesh { get; private set; }
+    [field: SerializeField]
+    public QuickOutline outlineScr { get; private set; }
+
     public BallFSM fsm;
 
 
@@ -50,6 +55,9 @@ public class Ball : MonoBehaviour
         fsm.DirtySwitch(fsm.stage1);
         spriteRenderer.gameObject.SetActive(true);
 
+        mesh.SetActive(true);
+        outlineScr.OutlineColor = stage1Color;
+
         // ? --- Ricopia stateEnter poiche' chiamare lo stateEnter
         // ? --- richiamerebbe l'evento associato, non lo vogliamo
         spriteRenderer.color = Color.gray;   
@@ -64,6 +72,12 @@ public class Ball : MonoBehaviour
     // -------------------------------------------
     #region Stage1
     [field: Header("Stage 1 Stats"), SerializeField] 
+    public Color stage1Color { get; private set; }
+    
+    [field: SerializeField]
+    public Color impactFrameColor { get; private set; }
+
+    [field: SerializeField]
     public float STAGE1_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
     public float STAGE1_GRAVITY_SCALE { get; private set; }
@@ -77,6 +91,9 @@ public class Ball : MonoBehaviour
     #region Stage2
     // ? --- Per andare allo stage 2
     [field: Header("Stage 2 Stats"), Space(10), SerializeField]
+    public Color stage2Color { get; private set; }
+
+    [field: SerializeField]
     public float STAGE2_MIN_MAGNITUDE { get; private set; }
     
     [field: SerializeField]
@@ -99,6 +116,9 @@ public class Ball : MonoBehaviour
     // -------------------------------------------
     #region Stage3
     [field: Header("Stage 3 Stats"), Space(10), SerializeField]
+    public Color stage3Color { get; private set; }
+
+    [field: SerializeField]
     public float STAGE3_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
     public float STAGE3_MAX_MAGNITUDE { get; private set; }
@@ -207,7 +227,7 @@ public class Ball : MonoBehaviour
             // ? --- dalla coroutine, la palla potrebbe bloccarsi
             // ? --- con dei FRAME DI RITARDO a causa deli update
             // ? --- indipendenti del Physics System.
-            StartCoroutine(ImpactFramesRoutine(46));
+            StartCoroutine(ImpactFramesRoutine(framesToWait));
         }
     }
 
@@ -215,10 +235,13 @@ public class Ball : MonoBehaviour
     {
         StopBallMovement();
         onImpactFrameStart.Invoke();
+        Color preaviousColor = outlineScr.OutlineColor;
+        outlineScr.OutlineColor = impactFrameColor;
         for(int i = 0; i < framesToWait; i++)
         {
             yield return null;
         }
+        outlineScr.OutlineColor = preaviousColor;
         onImpactFrameEnd.Invoke();
         StartBallMovement();
     }
@@ -258,8 +281,14 @@ public class Ball : MonoBehaviour
             () =>
             {
                 spriteRenderer.gameObject.SetActive(false);
+                mesh.SetActive(false);
             }
         );
+    }
+
+    private void Start()
+    {
+        outlineScr.OutlineColor = stage1Color;
     }
 
 

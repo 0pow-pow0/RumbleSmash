@@ -18,6 +18,7 @@ public class PlayerBallInteractions : MonoBehaviour
 
     
     [Header("Gameplay Stats")]
+    #region Gameplay Stats
     [SerializeField, ReadOnly] string activeState;
     [field:SerializeField] public int KICK_FORCE { get; private set; }
     
@@ -35,9 +36,10 @@ public class PlayerBallInteractions : MonoBehaviour
     // -------------------------------------------
     // ! Timing 
     // -------------------------------------------
+
     // ? --- Tempo di pressione del tasto del CALCIO necessario per 
     // ? --- raggiungere il massimo della carica del CALCIO.
-    [field: Space(10), SerializeField] 
+    [field: Space(10), SerializeField]
     public float TIME_TO_REACH_MAX_CHARGE { get; private set; }
 
     // ? --- Tempo di pressione necessaria prima 
@@ -48,6 +50,8 @@ public class PlayerBallInteractions : MonoBehaviour
     [field:SerializeField] 
     public int KICK_COLLIDER_FRAME_DURATION { get; private set; }
 
+
+    #endregion
     [FoldoutGroup("Flags")]
     [SerializeField] private EditorAttributes.Void flagsGroup;
 
@@ -59,9 +63,12 @@ public class PlayerBallInteractions : MonoBehaviour
         fsm.DirtySwitch(fsm.awaitState);
     }
 
+
+
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
+    #region Events
     [NonSerialized] public UnityEvent onKickStart = new();
     [NonSerialized] public UnityEvent onKickEnd = new();
 
@@ -70,6 +77,8 @@ public class PlayerBallInteractions : MonoBehaviour
     [NonSerialized] public UnityEvent onChargeEnd = new();
     // ? --- Passa il punto di collisione con la palla
     [NonSerialized] public UnityEvent<Vector2> onBallHit = new();
+    #endregion
+
 
 
     void Awake()

@@ -20,6 +20,7 @@ public class PowUtilityU : MonoBehaviour
         float timeToWait
         )
     {
+        Debug.Log("Runnato");
         yield return new WaitForSeconds(timeToWait);
         action.Invoke();
     }
@@ -61,6 +62,8 @@ public class PowUtilityU : MonoBehaviour
         StartCoroutine(RepeatActionForFrameRoutine(action, frameDuration));
     }
 
+
+
     private IEnumerator RepeatActionForFrameRoutine(
         Action action,
         int frameDuration)
@@ -74,6 +77,8 @@ public class PowUtilityU : MonoBehaviour
             framesSinceStart++;
         }
     }
+
+
     // -------------------------------------------
     // ! Color related
     // -------------------------------------------
@@ -110,6 +115,10 @@ public class PowUtilityU : MonoBehaviour
         InitSingleton();
     }
 
+    void Start()
+    {
+
+    }
 
     // -------------------------------------------
     // ! Singleton shit

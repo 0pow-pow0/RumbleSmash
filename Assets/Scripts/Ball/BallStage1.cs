@@ -19,7 +19,9 @@ public class BallStage1 : FSMBaseState<BallFSM>
     }
     public override void StateEnter(FSM<BallFSM> p)
     {
-        bl.spriteRenderer.color = Color.gray;   
+        bl.spriteRenderer.color = bl.stage1Color;   
+        bl.outlineScr.OutlineColor = bl.stage1Color;
+
         bl.rb.gravityScale = bl.STAGE1_GRAVITY_SCALE;
         bl.rb.sharedMaterial = bl.hardBounciness;
 

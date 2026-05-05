@@ -16,7 +16,6 @@ public class PlayerGroundCheck : MonoBehaviour
         if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
         {
             plr.isOnGround = true; 
-            Debug.Log("Landed");
             plr.pj.onLand.Invoke();
         }    
     }

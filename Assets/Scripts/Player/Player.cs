@@ -86,9 +86,14 @@ public class Player : MonoBehaviour
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
-    [NonSerialized] public UnityEvent onPlayerMoveEnd = new();
-    [NonSerialized] public UnityEvent onPlayerMoveStart = new();
-
+    #region Events
+    [NonSerialized] 
+    public UnityEvent onPlayerMoveEnd = new();
+    [NonSerialized] 
+    public UnityEvent onPlayerMoveStart = new();
+    #endregion
+    
+    
     public InputAction moveInput { get; private set; }
     public InputAction jumpInput { get; private set; }
 
@@ -169,7 +174,6 @@ public class Player : MonoBehaviour
             && !hasEnded)
         {
             onPlayerMoveEnd.Invoke();
-            Debug.Log("Ended");
             hasEnded = true;
             hasStarted = false;
         }
@@ -407,10 +411,8 @@ public class Player : MonoBehaviour
         // ? --- non viene resettata la velocita' lineare.
         // ? --- In questo modo la scalo senza dare l'effetto 
         // ? --- di stop repentino.
-        if(!canMove)
+        if(!canMove && rb.linearVelocityX != 0)
         {
-            if(rb.linearVelocityX == 0)
-                return;
             
             float result = 
                 Mathf.Lerp(rb.linearVelocity.x, 0, 0.02f);
@@ -421,7 +423,7 @@ public class Player : MonoBehaviour
             );
         }
  
-            FeedBackArrowMovement();
+        FeedBackArrowMovement();
     }
 
 

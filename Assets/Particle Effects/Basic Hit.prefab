@@ -9812,7 +9812,7 @@ GameObject:
   - component: {fileID: 7186336569308298029}
   - component: {fileID: 4983986941557772422}
   m_Layer: 0
-  m_Name: 'Basic Hit '
+  m_Name: Basic Hit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
