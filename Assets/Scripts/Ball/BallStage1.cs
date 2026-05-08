@@ -25,6 +25,8 @@ public class BallStage1 : FSMBaseState<BallFSM>
         bl.rb.gravityScale = bl.STAGE1_GRAVITY_SCALE;
         bl.rb.sharedMaterial = bl.hardBounciness;
 
+        bl.damage = bl.STAGE1_DAMAGE;
+
         bl.onBallStage1Start.Invoke();
     }
 

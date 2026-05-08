@@ -85,9 +85,10 @@ public class RoundManager : MonoBehaviour
             spawnpointBall.transform.position;
         g.ball.Reset();
         
-
-        g.player1Goal.SetScoreCollider(true);
-        g.player2Goal.SetScoreCollider(true);
+        // ? --- E' qui e non si trova nel codice del goal
+        // ? --- per questioni di flow, mi cacavo
+        g.player1Goal.SetRoundBeginState();
+        g.player2Goal.SetRoundBeginState();
 
     
         Time.timeScale = 1f;
@@ -120,8 +121,8 @@ public class RoundManager : MonoBehaviour
 
         GameManager g = GameManager.Get();
                 
-        g.player1Goal.SetScoreCollider(false);
-        g.player2Goal.SetScoreCollider(false);
+        g.player1Goal.goalColl.SetCollider(false);
+        g.player2Goal.goalColl.SetCollider(false);
 
         onRoundEnd.Invoke();
         PowUtilityU.Get().DelayAction(

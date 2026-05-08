@@ -47,9 +47,9 @@ public class PlayerBallCollider : MonoBehaviour
         //Debug.Log("Pisello: " + other.gameObject.layer);
         if(other.gameObject.layer == LayerMask.NameToLayer("Ball"))
         {
-            Debug.Log("Ball hit!");
-            Debug.Log("Power: " + lastPowerImpressed);
-            Debug.Log("Direction: " + lastDirectionImpressedNormalized);
+            //Debug.Log("Ball hit!");
+            //Debug.Log("Power: " + lastPowerImpressed);
+            //Debug.Log("Direction: " + lastDirectionImpressedNormalized);
 
             Ball bl =  other.GetComponentInParent<Ball>();
   

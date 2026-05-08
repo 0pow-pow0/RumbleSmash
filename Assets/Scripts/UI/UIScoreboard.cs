@@ -14,16 +14,13 @@ public class UIScoreboard : MonoBehaviour
 
 
 
-
+    void Awake()
+    {
+        father.SetActive(false);
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        MatchManager.Get().onMatchBegin
-            .AddListener
-            (
-                SetInitialState
-            );
-
         MatchManager.Get().onPlayer1Score.AddListener(
             SetPlayer1Points
         );
@@ -36,7 +33,7 @@ public class UIScoreboard : MonoBehaviour
         MatchManager.Get().onPreMatchAssignDevices.AddListener(
             () =>
             {
-                father.SetActive(true);
+                father.SetActive(false);
             }
         );
 
@@ -45,7 +42,7 @@ public class UIScoreboard : MonoBehaviour
         MatchManager.Get().onMatchBegin.AddListener(
             () =>
             {
-                father.SetActive(true);
+                SetInitialState();
             }
         );
 

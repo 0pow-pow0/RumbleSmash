@@ -6,6 +6,7 @@ using EditorAttributes;
 using UnityEngine.AI;
 using UnityEditor.Rendering;
 using NUnit.Framework;
+using Unity.VisualScripting;
 
 
 [System.Serializable]
@@ -28,8 +29,9 @@ public class Player : MonoBehaviour
     [field: SerializeField] 
     public Rigidbody2D rb { get; private set; }
     [field: SerializeField] 
-    public SpriteRenderer sprite { get; private set; }
-
+    public BoxCollider2D coll { get; private set; }
+    [field: SerializeField]
+    public GameObject meshScalePivot { get; private set; }
 
     [field: SerializeField]
     public GameObject pivotRotationBasedCollider { get; private set;}
@@ -131,7 +133,9 @@ public class Player : MonoBehaviour
     /// questa variabile
     /// </summary>
     int movementSteerFrameTolerance;
-    const int MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE = 4;
+
+    [field: Header("Gameplay Logic"), SerializeField]
+    public int MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE { get; private set; }
     bool hasEnded = false;
     bool hasStarted = false;
 
@@ -173,6 +177,7 @@ public class Player : MonoBehaviour
                 MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE
             && !hasEnded)
         {
+            Debug.Log("TriggeredAnimation!");
             onPlayerMoveEnd.Invoke();
             hasEnded = true;
             hasStarted = false;
@@ -343,22 +348,33 @@ public class Player : MonoBehaviour
         if(inputDirection.x > 0)
         {
             isFacingRight = true;
-            sprite.gameObject.transform.localScale = 
+            coll.gameObject.transform.localScale = 
                 new Vector3(
-                    Mathf.Abs(sprite.transform.localScale.x),
-                    sprite.transform.localScale.y,
-                    sprite.transform.localScale.z
+                    Mathf.Abs(coll.transform.localScale.x),
+                    coll.transform.localScale.y,
+                    coll.transform.localScale.z
                 );
+            meshScalePivot.transform.localScale =
+                new Vector3(
+                    Mathf.Abs(meshScalePivot.transform.localScale.x),
+                    meshScalePivot.transform.localScale.y,
+                    meshScalePivot.transform.localScale.z);
         }
         else if(inputDirection.x < 0)
         {
             isFacingRight = false;
-            sprite.gameObject.transform.localScale = 
+            coll.gameObject.transform.localScale = 
                 new Vector3( 
-                    -Mathf.Abs(sprite.transform.localScale.x),
-                    sprite.transform.localScale.y,
-                    sprite.transform.localScale.z
+                    -Mathf.Abs(coll.transform.localScale.x),
+                    coll.transform.localScale.y,
+                    coll.transform.localScale.z
                 );
+
+            meshScalePivot.transform.localScale =
+                new Vector3(
+                    -Mathf.Abs(meshScalePivot.transform.localScale.x),
+                    meshScalePivot.transform.localScale.y,
+                    meshScalePivot.transform.localScale.z);
         }
     }
     

@@ -6,17 +6,20 @@ public class GoalCollider : MonoBehaviour
     [SerializeField]
     Goal goal;
 
+    public BoxCollider2D coll { get; private set; }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
+        coll = GetComponent<BoxCollider2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    
+    public void SetCollider(bool isActive)
     {
-        
+        coll.enabled = isActive;
     }
+
 
     void OnTriggerEnter2D(Collider2D collision)
     {

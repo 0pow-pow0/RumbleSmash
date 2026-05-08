@@ -9,22 +9,29 @@ public class UIPreMatchAnimations : MonoBehaviour
 
     void SetInitialState()
     {
-        father.SetActive(true);
+        father.SetActive(false);
                 
     }
+
+    void Awake()
+    {
+        SetInitialState();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {
+    {   
+
         MatchManager.Get().onPreMatchShowRivals.AddListener(
             (float dur) =>
             {
-                SetInitialState();
+                father.SetActive(true);
 
 
                 PowUtilityU.Get().DelayAction(
                     () =>
                     {
-                        father.SetActive(false);
+                        SetInitialState();
                     },
                     dur);
             }

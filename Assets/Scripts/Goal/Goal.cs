@@ -1,18 +1,87 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UtilityShit;
 
 public class Goal : MonoBehaviour
 {
     [Header("References"), SerializeField]
     SpriteRenderer sprite;
 
-    [SerializeField]
-    BoxCollider2D coll;
-    public void SetScoreCollider(bool isActive)
+    [field: SerializeField]
+    public GoalCollider goalColl { get; private set; }
+    [field: SerializeField]
+    public GoalShieldCollider shieldColl { get; private set; }
+
+    #region Gameplay Vars
+    [field: Header("Gameplay Vars"), SerializeField]
+    public GoalGameplayStats stats { get; private set; }
+    public int shieldHP { get; private set; }
+    public void RemoveShieldHP(int toRemove)
     {
-        coll.enabled = isActive;
+        if(isInvulnerable)
+        {
+            Debug.Log("Is invulnerable");   
+            return;
+        }
+
+        shieldHP -= toRemove;
+        onShieldDamage.Invoke();
+        if(shieldHP <= 0 )
+        {
+            shieldHP = 0;
+             
+            shieldColl.SetCollider(false);
+            goalColl.SetCollider(true);
+            PowUtility.Log("Destroyed", Color.red);
+            onShieldDestroy.Invoke();
+            return;
+        }
+
+        StartInvulnerability();
     }
+
+
+    [SerializeField, EditorAttributes.ReadOnly]
+    public bool isInvulnerable = false;
+    public void StartInvulnerability()
+    {
+        isInvulnerable = true;
+
+        PowUtilityU.Get().DelayAction
+        (
+            () =>
+            {
+                isInvulnerable = false;
+            },
+            stats.INVULNERABILITY_TIME
+        );
+    }
+
+    public void SetRoundBeginState()
+    {
+        goalColl.SetCollider(false);
+        shieldColl.SetCollider(true);
+
+        shieldHP = stats.START_SHIELD_HP;
+    }
+
+    #endregion 
+
+    #region Events
+
+    public UnityEvent onShieldDamage { get; private set; } = new();
+    public UnityEvent onShieldDestroy { get; private set; } = new();
+    public UnityEvent onInvulnerabilityStart { get; private set; } = new();
+    public UnityEvent onInvulnerabilityEnd { get; private set; } = new();
+
+
+    #endregion
+
+    void Start()
+    {
+        shieldHP = stats.START_SHIELD_HP;
+    }
+
 
 
     /// <summary>
@@ -36,9 +105,7 @@ public class Goal : MonoBehaviour
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Update()
     {
     }
-
 }

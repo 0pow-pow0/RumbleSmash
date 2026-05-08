@@ -21,7 +21,7 @@ class PlayerGroundCheck {
 }
 
 class PlayerBallCollider {
-
+    Comunica con ball
 }
 
 
@@ -40,8 +40,11 @@ PlayerBallInteractions --o Player
 Player --o PlayerJump
 Player --o PlayerBallInteractions
 
+PlayerBallInteractions --> PlayerBallCollider
 
-note for PlayerParticleManager "Si iscrive a tutto lol, manco le disegno le frecce"
+
+
+note for PlayerParticleManager "Si iscrive agli eventi di praticamente tutti"
 
 
 ```

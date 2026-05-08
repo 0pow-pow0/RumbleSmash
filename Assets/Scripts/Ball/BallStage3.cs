@@ -36,6 +36,8 @@ public class BallStage3 : FSMBaseState<BallFSM>
 
         minTimePassedTimer.Restart();        
         
+        bl.damage = bl.STAGE3_DAMAGE;
+
         bl.onBallStage3Start.Invoke();  
     }   
 

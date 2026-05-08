@@ -28,6 +28,13 @@ public class Ball : MonoBehaviour
 
     public BallFSM fsm;
 
+    #region Gameplay Stats
+    
+    [NonSerialized]
+    public int damage;
+
+    #endregion
+
 
     // -------------------------------------------
     // ! Bounciness Related
@@ -54,6 +61,7 @@ public class Ball : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         fsm.DirtySwitch(fsm.stage1);
         spriteRenderer.gameObject.SetActive(true);
+        damage = STAGE1_DAMAGE;
 
         mesh.SetActive(true);
         outlineScr.OutlineColor = stage1Color;
@@ -77,6 +85,10 @@ public class Ball : MonoBehaviour
     [field: SerializeField]
     public Color impactFrameColor { get; private set; }
 
+
+    [field: SerializeField]
+    public int STAGE1_DAMAGE { get; private set; }
+
     [field: SerializeField]
     public float STAGE1_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
@@ -92,7 +104,8 @@ public class Ball : MonoBehaviour
     // ? --- Per andare allo stage 2
     [field: Header("Stage 2 Stats"), Space(10), SerializeField]
     public Color stage2Color { get; private set; }
-
+    [field: SerializeField]
+    public int STAGE2_DAMAGE { get; private set; }
     [field: SerializeField]
     public float STAGE2_MIN_MAGNITUDE { get; private set; }
     
@@ -117,6 +130,8 @@ public class Ball : MonoBehaviour
     #region Stage3
     [field: Header("Stage 3 Stats"), Space(10), SerializeField]
     public Color stage3Color { get; private set; }
+    [field: SerializeField]
+    public int STAGE3_DAMAGE { get; private set; }
 
     [field: SerializeField]
     public float STAGE3_MIN_MAGNITUDE { get; private set; }
@@ -275,13 +290,14 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         fsm = new BallFSM();
-        fsm.Awake();
+        fsm.Setup(this);
 
         onBallScore.AddListener(
             () =>
             {
                 spriteRenderer.gameObject.SetActive(false);
                 mesh.SetActive(false);
+                
             }
         );
     }
@@ -289,11 +305,13 @@ public class Ball : MonoBehaviour
     private void Start()
     {
         outlineScr.OutlineColor = stage1Color;
+        damage = STAGE1_DAMAGE;
     }
 
 
     public void Update()
     {
+        Debug.Log(fsm._currentState);
         ballStage = fsm._currentState._d_stateName;
 
         if(rb.linearVelocity.magnitude <= 
@@ -304,12 +322,6 @@ public class Ball : MonoBehaviour
         }
 
         magnitude = rb.linearVelocity.magnitude;
-
-        if(Keyboard.current.oKey.wasPressedThisFrame)
-        {
-            StartImpactFrames(5); 
-            Debug.Log("Impact frame");  
-        }
 
         //if(impactFr)
         fsm.Update();

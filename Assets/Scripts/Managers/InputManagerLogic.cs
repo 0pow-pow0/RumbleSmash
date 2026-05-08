@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,11 +13,11 @@ public class InputManagerLogic : MonoBehaviour
 
     
     [NonSerialized]
-    public UnityEvent onPlayer1Joined;
+    public UnityEvent onPlayer1Joined = new();
     [NonSerialized]
-    public UnityEvent onPlayer2Joined;
+    public UnityEvent onPlayer2Joined = new();
     [NonSerialized]
-    public UnityEvent onRestartDeviceAssignment;
+    public UnityEvent onRestartDeviceAssignment = new();
 
 
 
@@ -24,10 +25,6 @@ public class InputManagerLogic : MonoBehaviour
     {
         InitSingleton();
         InputManagerLogic.Get();
-
-        onPlayer1Joined = new UnityEvent();
-        onPlayer2Joined = new UnityEvent();
-        onRestartDeviceAssignment = new UnityEvent();
 
         manager = GetComponent<PlayerInputManager>();
 
@@ -39,7 +36,7 @@ public class InputManagerLogic : MonoBehaviour
 
     public void OnPlayerJoined(PlayerInput player)
     {   
-
+        Debug.Log("Pisello ");
         if(GameManager.Get().player1 == null)
         {
             GameManager.Get().SetPlayer1( 
@@ -167,6 +164,7 @@ public class InputManagerLogic : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(manager.playerCount);
     }
 
 

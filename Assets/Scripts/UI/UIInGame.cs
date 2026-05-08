@@ -32,6 +32,7 @@ public class UIInGame : MonoBehaviour
     [SerializeField]
     private Image player2DoppioScattoImage;
 
+
     void Start()
     {
         player1Father.SetActive(false);
@@ -51,6 +52,10 @@ public class UIInGame : MonoBehaviour
         // );
 
         GameManager g = GameManager.Get();
+
+        // -------------------------------------------
+        // ! Players
+        // -------------------------------------------
 
         if(g.player1 == null)
         {

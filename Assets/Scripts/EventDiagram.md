@@ -37,6 +37,7 @@ class Ball {
 }
 
 
+RoundManager ..> Goal : Gestisce behaviour in RoundStartBegin
 
 Goal ..> MatchManager : !onPlayer1Score & !onPlayer2Score
 
@@ -94,6 +95,7 @@ namespace Plr {
         >! onBallHit
     }
 }
+
 
 
 UIInGame ..> PlayerJump : >>onDoppioScattoStart

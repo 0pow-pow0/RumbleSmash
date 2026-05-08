@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 using EditorAttributes;
 using NUnit.Framework;
 using TMPro;
@@ -50,7 +51,6 @@ public class MatchManager : MonoBehaviour
     {
         AssignPlayers();
 
-        Debug.Log("Palle");
         // ? --- Aspetta fino a che non si
         while(!GameManager.Get().IsPlayersAssigned())
         {
@@ -58,7 +58,7 @@ public class MatchManager : MonoBehaviour
         }
         
         onPreMatchAssignDevices.Invoke();
-        MatchBegin();
+        
     }
 
     [NonSerialized]
@@ -69,14 +69,24 @@ public class MatchManager : MonoBehaviour
     /// (ovvero, non ho riavviato il match)
     /// </summary>
     /// Protezione da restart coroutiune non necessaria.
-    public void MatchBegin()
+    public void StartFirstTimeFlow()
     {
-        StartCoroutine(MatchBeginRoutine());
+        StartCoroutine(StartFirstTimeFlowRoutine());
     }
 
-    private IEnumerator MatchBeginRoutine()
+    private IEnumerator StartFirstTimeFlowRoutine()
     {
-        PowUtility.Log("Match: BeginningMatch", Color.cyan);
+        PowUtility.Log("Match: StartFirstTimeFlow", Color.cyan);
+
+        if(shouldAssignPlayers)
+        {
+            InputManagerLogic.Get().ActivateAllInputs();
+            onPreMatchAssignDevices.Invoke();
+            while(!GameManager.Get().IsPlayersAssigned())
+            {
+                yield return null;
+            }
+        }
 
         if(!areWeTesting)
         {
@@ -85,7 +95,11 @@ public class MatchManager : MonoBehaviour
         }
 
 
+        PowUtility.Log("Match: Match Begin", Color.cyan);
+
+        
         onMatchBegin.Invoke();
+        RoundManager.Get().RoundStart();
     }
 
     /// <summary>
@@ -96,8 +110,8 @@ public class MatchManager : MonoBehaviour
     public void MatchEnd()
     {
         GameManager g = GameManager.Get();
-        g.player1Goal.SetScoreCollider(false);
-        g.player2Goal.SetScoreCollider(false);
+        g.player1Goal.goalColl.SetCollider(false);
+        g.player2Goal.goalColl.SetCollider(false);
 
         InputManagerLogic.Get().DeactivateAllPlayerMap();
 
@@ -222,15 +236,7 @@ public class MatchManager : MonoBehaviour
 
     void Start()
     {        
-        if(shouldAssignPlayers)
-        {
-            MatchBegin();
-        }
-        else
-        {
-            StartCoroutine(PreMatchAssignDevices()); 
-        }
-
+        StartFirstTimeFlow();
     }
 
     void Update()

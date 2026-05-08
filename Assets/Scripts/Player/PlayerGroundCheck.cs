@@ -15,8 +15,16 @@ public class PlayerGroundCheck : MonoBehaviour
     {
         if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
         {
-            plr.isOnGround = true; 
-            plr.pj.onLand.Invoke();
+            plr.isOnGround = true;  
+            // ? --- Altrimenti se dovesse mai capitare di
+            // ? --- sfiorare con il collider una piattaforma
+            // ? --- mentre si cade si trigghererebbe,
+            // ? --- anche se stiamo cadendo.
+            if(plr.rb.linearVelocityY <= 0) 
+            {
+                Debug.Log("OnLand");
+                plr.pj.onLand.Invoke();
+            }
         }    
     }
 

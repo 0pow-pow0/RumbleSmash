@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using EditorAttributes;
 using UtilityShit;
+using System.Net.NetworkInformation;
+using Unity.Collections.LowLevel.Unsafe;
 
 /// <summary>
 /// Quando il giocatore effettua il salto si muovera' di 
@@ -31,6 +33,7 @@ public class PlayerJump : MonoBehaviour
     #endregion
 
 
+    #region Logic Switches
     //[Header("Flags")]
     [FoldoutGroup("Flags", nameof(firstJumpPerformed), nameof(firstJumpPerforming),
          nameof(doppioScattoPerformed),  nameof(doppioScattoPerforming),
@@ -86,6 +89,13 @@ public class PlayerJump : MonoBehaviour
     bool canPerformJustPressedReleaseEvent = false;
 
 
+    /// <summary>
+    /// La condizione di caduta verrebbe chiamate per ogni
+    /// frame in cui siamo in aria senza questo switch
+    /// </summary>
+    bool hasCalledOnFallEvent = false;
+    #endregion
+
     // -------------------------------------------
     // ! Events
     // -------------------------------------------
@@ -98,6 +108,12 @@ public class PlayerJump : MonoBehaviour
     public UnityEvent onDoppioScattoStart = new();
     [NonSerialized]
     public UnityEvent onDoppioScattoEnd = new();
+
+    // ? --- Chiamato solo ad inizio caduta E NON 
+    // ? --- interferiscono altri stati.
+    [NonSerialized]
+    public UnityEvent onFallStart = new();
+    
     #endregion
 
 
@@ -138,7 +154,6 @@ public class PlayerJump : MonoBehaviour
             // ? --- Primo Salto
             if(!firstJumpPerformed)
             {
-                Debug.Log("PrimoSalto");
                 firstJumpPerformed = true;
                 firstJumpPerforming = true;
                 
@@ -284,6 +299,7 @@ public class PlayerJump : MonoBehaviour
             Timer(DOPPIOSCATTO_COOLDOWN_DURATION);
     }
 
+    
     void Update()
     {
         doppioScattoCooldownTimer.UpdateTime();
@@ -292,6 +308,21 @@ public class PlayerJump : MonoBehaviour
             !plr.pbi.fsm.chargingState.isActive)
         {
             InputRetrieve();
+        }
+
+        if(plr.rb.linearVelocityY < 0 &&
+            !hasCalledOnFallEvent && 
+            !firstJumpPerforming &&
+            !doppioScattoPerforming &&
+            !plr.pbi.fsm.kickState.isActive &&
+            !plr.pbi.fsm.chargingState.isActive )
+        {
+            hasCalledOnFallEvent = true;
+            onFallStart.Invoke();
+        } 
+        else if(plr.rb.linearVelocityY >= 0)
+        {
+            hasCalledOnFallEvent = false;
         }
 
         /// Ho aumentato il numero delle chiamate del FixedUpdate

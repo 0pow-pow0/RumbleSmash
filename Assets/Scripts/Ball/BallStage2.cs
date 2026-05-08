@@ -35,6 +35,9 @@ public class BallStage2 : FSMBaseState<BallFSM>
         
         hasImpactedFramedFromCollision = false;
 
+        bl.damage = bl.STAGE2_DAMAGE;
+
+
         bl.onBallStage1Start.Invoke();  
     }   
 

@@ -20,7 +20,6 @@ public class PowUtilityU : MonoBehaviour
         float timeToWait
         )
     {
-        Debug.Log("Runnato");
         yield return new WaitForSeconds(timeToWait);
         action.Invoke();
     }

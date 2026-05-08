@@ -34,7 +34,7 @@ public class PlayerParticleManager : MonoBehaviour
     public SpriteRenderer chargeStartSprite;
 
     [field: SerializeField]
-    public ParticleSystem chargEnd { get; private set; }
+    public ParticleSystem chargeEnd { get; private set; }
 
 
 
@@ -78,11 +78,11 @@ public class PlayerParticleManager : MonoBehaviour
                     runStartSprite.transform.position = 
                     new Vector2
                     (
-                        plr.sprite.bounds.center.x -
+                        plr.coll.bounds.center.x -
                         runStartSprite.bounds.extents.x, 
 
-                        plr.sprite.bounds.center.y -
-                        plr.sprite.bounds.extents.y +
+                        plr.coll.bounds.center.y -
+                        plr.coll.bounds.extents.y +
                         runStartSprite.bounds.extents.y
                     );
                     
@@ -93,18 +93,17 @@ public class PlayerParticleManager : MonoBehaviour
                     runStartSprite.transform.position = 
                     new Vector2
                     (
-                        plr.sprite.bounds.center.x +
-                        plr.sprite.bounds.extents.x +
+                        plr.coll.bounds.center.x +
+                        plr.coll.bounds.extents.x +
                         runStartSprite.bounds.extents.x,
 
-                        plr.sprite.bounds.center.y - 
-                        plr.sprite.bounds.extents.y +
+                        plr.coll.bounds.center.y - 
+                        plr.coll.bounds.extents.y +
                         runStartSprite.bounds.extents.y
                     );
                 
                 }
 
- 
                 playerEffects.SetTrigger("RunStartTrigger");
             }
         );
@@ -125,12 +124,12 @@ public class PlayerParticleManager : MonoBehaviour
                     runEndSprite.transform.position = 
                         new Vector2
                         (
-                            plr.sprite.bounds.center.x +
-                            plr.sprite.bounds.extents.x +
+                            plr.coll.bounds.center.x +
+                            plr.coll.bounds.extents.x +
                             runEndSprite.sprite.bounds.extents.x, 
 
-                            plr.sprite.bounds.center.y -
-                            plr.sprite.bounds.extents.y +
+                            plr.coll.bounds.center.y -
+                            plr.coll.bounds.extents.y +
                             runEndSprite.sprite.bounds.extents.y 
                         );                    
                 }
@@ -140,17 +139,16 @@ public class PlayerParticleManager : MonoBehaviour
                     runEndSprite.transform.position = 
                     new Vector2
                     (
-                        plr.sprite.bounds.center.x -
-                        plr.sprite.bounds.extents.x - 
+                        plr.coll.bounds.center.x -
+                        plr.coll.bounds.extents.x - 
                         runEndSprite.sprite.bounds.extents.x,
                         
-                        plr.sprite.bounds.center.y - 
-                        plr.sprite.bounds.extents.y +
+                        plr.coll.bounds.center.y - 
+                        plr.coll.bounds.extents.y +
                         runEndSprite.sprite.bounds.extents.y
                     );
                 
                 }          
-
                 playerEffects.SetTrigger("RunEndTrigger");
             }
         );
@@ -160,10 +158,10 @@ public class PlayerParticleManager : MonoBehaviour
             {
                 
                 jumpStartSprite.transform.position = new Vector2(
-                    plr.sprite.bounds.center.x,
+                    plr.coll.bounds.center.x,
 
-                    plr.sprite.bounds.center.y -
-                    plr.sprite.bounds.extents.y +
+                    plr.coll.bounds.center.y -
+                    plr.coll.bounds.extents.y +
                     jumpStartSprite.bounds.extents.y
                     
                 );
@@ -178,10 +176,10 @@ public class PlayerParticleManager : MonoBehaviour
             {
                 jumpLandSprite.transform.position = new Vector2
                 (
-                    plr.sprite.bounds.center.x,
+                    plr.coll.bounds.center.x,
 
-                    plr.sprite.bounds.center.y -
-                    plr.sprite.bounds.extents.y +
+                    plr.coll.bounds.center.y -
+                    plr.coll.bounds.extents.y +
                     jumpLandSprite.bounds.extents.y / 2
                 );
                 playerEffects.SetTrigger("JumpLandTrigger");
@@ -242,11 +240,11 @@ public class PlayerParticleManager : MonoBehaviour
             {
                 // oldchargeStart.gameObject.transform.position =
                 //     new Vector3(
-                //         plr.sprite.bounds.center.x + 
-                //         plr.sprite.bounds.extents.x,
+                //         plr.coll.bounds.center.x + 
+                //         plr.coll.bounds.extents.x,
                         
-                //         plr.sprite.bounds.center.y +
-                //         plr.sprite.bounds.extents.y,
+                //         plr.coll.bounds.center.y +
+                //         plr.coll.bounds.extents.y,
                 //         0f
                 //     );
 
@@ -349,7 +347,6 @@ public class PlayerParticleManager : MonoBehaviour
                 // ? --- charge, se stiamo caricando,
                 // ? --- sia a fine kick, anche se non stiamo chargando.
                 // ? --- In ogni caso, dunque, io resetto le risorse del charge.
-                Debug.Log("PiselloChargeEnd");
                 chargeStart.transform.DOKill();
                 chargeStartSprite.DOKill();
                 chargeStart.SetActive(false); 
