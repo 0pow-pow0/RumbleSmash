@@ -11,6 +11,30 @@ public class PlayerGroundCheck : MonoBehaviour
         plr = GetComponentInParent<Player>();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
+        {
+            plr.isOnGround = true;  
+            // ? --- Altrimenti se dovesse mai capitare di
+            // ? --- sfiorare con il collider una piattaforma
+            // ? --- mentre si cade si trigghererebbe,
+            // ? --- anche se stiamo cadendo.
+            if(plr.rb.linearVelocityY <= 0) 
+            {
+                Debug.Log("OnLand");
+                plr.pj.onLand.Invoke();
+            }
+        }    
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
+        {
+            plr.isOnGround = false; 
+        }        
+    }
     private void OnTriggerStay2D(Collider2D other)
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("LevelCollider")

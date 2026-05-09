@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3769d6daff9983e4796580369074148a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  father: {fileID: 0}
+  father: {fileID: 5019625136006137596}
   canvas: {fileID: 0}
   anim: {fileID: 8792827589774918293}
   codedFadeAnimationPanel: {fileID: 6155523620932539626}

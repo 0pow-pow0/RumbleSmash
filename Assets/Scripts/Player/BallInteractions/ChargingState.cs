@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ public class ChargingState : BaseState
 {
     // ? --- Il tempo che abbiamo passato a caricare il colpo
     float timePassedSinceStart;
+
+    bool hasTriggeredChargeEvent = false;
 
     public ChargingState() : 
         base("Charge")
@@ -19,7 +22,9 @@ public class ChargingState : BaseState
     }
     public override void StateEnter(BallInteractionsFSM p)
     {
+        p.pbi.plr.DisableMovement();
         timePassedSinceStart = 0f;
+        hasTriggeredChargeEvent = false;
         p.pbi.onChargeStart.Invoke();
     }
     public override void StateUpdate(BallInteractionsFSM p)
@@ -35,6 +40,12 @@ public class ChargingState : BaseState
                 1f
             ); 
 
+        if(!hasTriggeredChargeEvent &&
+            timePassedSinceStart >= p.pbi.TIME_TO_REACH_MAX_CHARGE)
+        {
+            p.pbi.onChargeEnd.Invoke();
+            hasTriggeredChargeEvent = true;
+        }
 
         if(p.pbi.kickInput.WasReleasedThisFrame())
         {
@@ -54,6 +65,8 @@ public class ChargingState : BaseState
     }
     public override void StateExit(BallInteractionsFSM p)
     {
-        p.pbi.onChargeEnd.Invoke();
+        p.pbi.plr.EnableMovement();
+        p.pbi.onKickEnd.Invoke();
+        //p.pbi.onChargeEnd.Invoke();
     }
 }

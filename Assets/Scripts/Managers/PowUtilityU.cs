@@ -25,6 +25,58 @@ public class PowUtilityU : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="action">Il parametro conterra' 
+    /// il tempo passato dall'inizio della coroutine  
+    /// </param>
+    /// <param name="exitCondition"></param>
+    public void DoActionUntil(
+        Action<float> action,
+        Func<float, bool> exitCondition)
+    {
+        StartCoroutine(DoActionUntilRoutine(action, exitCondition));
+    }
+    private IEnumerator DoActionUntilRoutine
+    (
+        Action<float> action,
+        Func<float, bool> exitCondition
+    )
+    {
+        float passedTime = 0f;
+        while(exitCondition.Invoke(passedTime) == true)
+        {
+            action.Invoke(passedTime);
+            passedTime += Time.deltaTime;   
+            yield return null;
+        }
+    }
+    
+    public void RepeatActionForFrame(
+        Action action,
+        int frameDuration
+    )
+    {
+        StartCoroutine(RepeatActionForFrameRoutine(action, frameDuration));
+    }
+
+
+
+    private IEnumerator RepeatActionForFrameRoutine(
+        Action action,
+        int frameDuration)
+    {
+        int framesSinceStart = 0;
+ 
+        while (framesSinceStart <= frameDuration)
+        {
+            action.Invoke();
+            yield return null;
+            framesSinceStart++;
+        }
+    }
+
 
     // -------------------------------------------
     // ! Color related
@@ -62,6 +114,10 @@ public class PowUtilityU : MonoBehaviour
         InitSingleton();
     }
 
+    void Start()
+    {
+
+    }
 
     // -------------------------------------------
     // ! Singleton shit

@@ -24,7 +24,8 @@ public class BallStage2 : FSMBaseState<BallFSM>
     }
     public override void StateEnter(FSM<BallFSM> p)
     {
-        bl.spriteRenderer.color = Color.yellow;
+        bl.spriteRenderer.color = bl.stage2Color;
+        bl.outlineScr.OutlineColor = bl.stage2Color;
 
         bl.rb.gravityScale = bl.STAGE2_GRAVITY_SCALE;
 
@@ -33,6 +34,9 @@ public class BallStage2 : FSMBaseState<BallFSM>
         minTimePassedTimer.Restart();        
         
         hasImpactedFramedFromCollision = false;
+
+        bl.damage = bl.STAGE2_DAMAGE;
+
 
         bl.onBallStage1Start.Invoke();  
     }   

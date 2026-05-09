@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3951e36c09ecd44488fc9244e522c17, type: 3}
+  m_Name: GoalGameplayStats
+  m_EditorClassIdentifier: 
+  START_SHIELD_HP: 100
+  THRESHOLD_HP_STAGE1_BREAK: 0
+  THRESHOLD_HP_STAGE2_BREAK: 0
+  THRESHOLD_HP_STAGE3_BREAK: 0

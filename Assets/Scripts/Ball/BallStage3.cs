@@ -27,7 +27,8 @@ public class BallStage3 : FSMBaseState<BallFSM>
     {
         hasImpactedFramedFromCollision = false;
 
-        bl.spriteRenderer.color = Color.red;
+        bl.spriteRenderer.color = bl.stage3Color;
+        bl.outlineScr.OutlineColor = bl.stage3Color;
 
         bl.rb.gravityScale = bl.STAGE3_GRAVITY_SCALE;
 
@@ -36,6 +37,8 @@ public class BallStage3 : FSMBaseState<BallFSM>
 
         minTimePassedTimer.Restart();        
         
+        bl.damage = bl.STAGE3_DAMAGE;
+
         bl.onBallStage3Start.Invoke();  
     }   
 

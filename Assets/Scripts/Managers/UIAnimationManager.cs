@@ -152,17 +152,6 @@ public class UIAnimationManager : MonoBehaviour
 
     void Update()
     {
-        if(Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            //StartScreenWideFadeToAndDecay
-            //    (Color.white, 4f, 1f); 
-            //StartScreenWideCurtainOpen(Color.white, 5f);
-        }
-        if(Keyboard.current.altKey.wasPressedThisFrame)
-        {
-            Debug.Log("coroutines stopped");
-            StopAllCoroutines(); 
-        }
         
     }
 

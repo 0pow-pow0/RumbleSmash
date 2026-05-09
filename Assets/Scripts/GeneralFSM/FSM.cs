@@ -71,4 +71,13 @@ public class FSM<T>
 
         return false;
     }
+
+    /// <summary>
+    /// Bypassa ogni CanEnter, StateExit e StateEnter;
+    /// </summary>
+    /// <param name="newState"></param>
+    public void DirtySwitch(FSMBaseState<T> newState)
+    {
+        _currentState = newState;
+    }
 }

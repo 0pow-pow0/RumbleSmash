@@ -12,9 +12,9 @@ public class BallFSM : FSM<BallFSM>
 
     public BallFSM() { }
 
-    public void Awake()
+    public void Setup(Ball ballRef)
     {
-        bl = GameManager.Get().ball;
+        bl = ballRef;
 
         stage1 = new BallStage1(bl);
         stage2 = new BallStage2(bl);
