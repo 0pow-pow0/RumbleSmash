@@ -75,6 +75,50 @@ public class Player : MonoBehaviour
         Debug.Log("ASD: " + moveInput.ReadValue<Vector2>());
         if(!canMove)
             return;
+<<<<<<< Updated upstream
+=======
+        } 
+
+
+
+        // -------------------------------------------
+        // ! Movement events
+        // -------------------------------------------
+        // ? --- Un bordello lol
+        if(movementInputValue == Vector2.zero)
+        {
+            movementSteerFrameTolerance++;
+        } 
+        // ? --- Ogni qual volta siamo in movimento
+        else
+        {
+            movementSteerFrameTolerance = 0;
+            //hasStarted = false;
+            hasEnded = false; 
+        }
+
+
+
+        if(movementInputValue == Vector2.zero 
+            && movementSteerFrameTolerance >= 
+                MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE
+            && !hasEnded)
+        {
+            onPlayerMoveEnd.Invoke();
+            hasEnded = true;
+            hasStarted = false;
+        }
+
+        if(movementInputValue != Vector2.zero
+            && !hasStarted)
+        {
+            hasStarted = true;
+            onPlayerMoveStart.Invoke();
+        }
+
+
+
+>>>>>>> Stashed changes
 
         if(movementInputValue == Vector2.zero)
         {

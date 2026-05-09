@@ -7,6 +7,7 @@ public class BallStage3 : FSMBaseState<BallFSM>
 
     // ? --- Tiene traccia del tempo passato in questo stato
     Timer minTimePassedTimer;
+    public bool bypassMinTimer;
 
     public BallStage3(Ball _bl) :
         base("Stage 3")
@@ -49,7 +50,7 @@ public class BallStage3 : FSMBaseState<BallFSM>
             Debug.Log("Stage3: timer ended");
             bl.rb.sharedMaterial = bl.veryHardBounciness;
         }
-
+        
         if(bl.rb.linearVelocity.magnitude > bl.STAGE3_MAX_MAGNITUDE)
         {
             Vector2 normLV = bl.rb.linearVelocity.normalized;
@@ -74,14 +75,21 @@ public class BallStage3 : FSMBaseState<BallFSM>
 
     public override void StateExit(FSM<BallFSM> p)
     {
+        bypassMinTimer = false;
         bl.onBallStage3End.Invoke();
     }
 
     bool hasImpactedFramedFromCollision = false;
     public override void OnCollisionEnter2D(
-    FSM<BallFSM> p,
-    Collision2D other)
+        FSM<BallFSM> p,
+        Collision2D other)
     {   
+        if(other.gameObject.layer ==
+            LayerMask.NameToLayer("Goal"))
+        {
+            p.SwitchState(p.Get().stage1);
+        }
+
         if(other.gameObject.layer == 
             LayerMask.NameToLayer("LevelCollider"))
         {

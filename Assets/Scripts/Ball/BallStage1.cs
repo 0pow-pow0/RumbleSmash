@@ -41,4 +41,15 @@ public class BallStage1 : FSMBaseState<BallFSM>
         bl.onBallStage1End.Invoke();    
     }
 
+    public override void OnCollisionEnter2D(
+        FSM<BallFSM> p, 
+        Collision2D other) 
+    {
+        if(other.gameObject.layer ==
+            LayerMask.NameToLayer("Goal"))
+        {
+            
+        }
+    }
+
 }

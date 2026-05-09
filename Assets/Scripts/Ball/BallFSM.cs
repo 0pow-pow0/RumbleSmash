@@ -1,3 +1,4 @@
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class BallFSM : FSM<BallFSM>
@@ -22,6 +23,22 @@ public class BallFSM : FSM<BallFSM>
         castedFather = this;
 
         _currentState = stage1;
+    }
+
+    public void DecreaseState()
+    {
+        if(_currentState is BallStage1)
+        {
+            
+        }
+        else if (_currentState is BallStage2)
+        {
+            SwitchState(stage1);
+        }
+        else if (_currentState is BallStage3)
+        {
+            SwitchState(stage2);
+        }
     }
 
     public new void Update()

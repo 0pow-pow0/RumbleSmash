@@ -62,7 +62,7 @@ public class InputManagerLogic : MonoBehaviour
             GameManager.Get().SetPlayer2( 
                 player.gameObject.GetComponent<Player>()
             );            
-
+            
             GameManager.Get().player2.plrInp.
                 DeactivateInput();
 
@@ -81,7 +81,10 @@ public class InputManagerLogic : MonoBehaviour
 
     void Update()
     {
+<<<<<<< Updated upstream
         
+=======
+>>>>>>> Stashed changes
     }
 
 

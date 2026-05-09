@@ -43,8 +43,7 @@ public class BallStage2 : FSMBaseState<BallFSM>
             
         
         if (bl.rb.linearVelocity.magnitude < 
-                bl.STAGE2_MIN_MAGNITUDE &&
-                     minTimePassedTimer.HasEnded())
+                bl.STAGE2_MIN_MAGNITUDE)
         {
             p.Get().SwitchState(p.Get().stage1);
             return; 
@@ -70,7 +69,6 @@ public class BallStage2 : FSMBaseState<BallFSM>
         bl.onBallStage2End.Invoke();
     }
 
-
     #region ImpactFrames
     bool hasImpactedFramedFromCollision = false; 
 
@@ -78,6 +76,13 @@ public class BallStage2 : FSMBaseState<BallFSM>
         FSM<BallFSM> p,
         Collision2D other)
     {   
+        if(other.gameObject.layer ==
+            LayerMask.NameToLayer("Goal"))
+        {
+            p.SwitchState(p.Get().stage1);
+        }
+
+        // ? --- Impact Frame
         if(other.gameObject.layer == 
             LayerMask.NameToLayer("LevelCollider"))
         {

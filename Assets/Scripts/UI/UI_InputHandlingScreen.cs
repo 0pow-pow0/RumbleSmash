@@ -15,6 +15,33 @@ public class UI_InputHandlingScreen : MonoBehaviour
 
     void Start()
     {
+<<<<<<< Updated upstream
+=======
+        MatchManager.Get().onPreMatchAssignDevices.AddListener
+        (
+            () =>
+            {
+                father.SetActive(true);
+            }
+        );
+
+        MatchManager.Get().onPreMatchShowRivals.AddListener
+        (
+            (float dur) =>
+            {
+                father.SetActive(false);
+            }
+        );
+
+        MatchManager.Get().onMatchBegin.AddListener
+        ( 
+            () =>
+            {
+                father.SetActive(false);
+            }  
+        );
+
+>>>>>>> Stashed changes
         InputManagerLogic.Get().onPlayer1Joined
         .AddListener
         (

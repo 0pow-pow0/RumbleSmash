@@ -96,7 +96,22 @@ public class RoundManager : MonoBehaviour
 
     public void RoundEnd()
     {
+<<<<<<< Updated upstream
         roundState = RoundState.MID;
+=======
+        roundState = RoundState.END;
+        //InputManagerLogic.Get().DeactivateAllInputs();
+        
+        Time.timeScale = 0.5f;
+
+        GameManager g = GameManager.Get();
+                
+        g.player1Goal.goalColl.SetCollider(false);
+        g.player2Goal.goalColl.SetCollider(false);
+
+        g.ball.goalColl.enabled = false;
+
+>>>>>>> Stashed changes
         onRoundEnd.Invoke();
 
         PowUtilityU.Get().DelayAction(

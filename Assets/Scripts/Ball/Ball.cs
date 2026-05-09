@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityEngine.Events;
@@ -21,8 +22,30 @@ public class Ball : MonoBehaviour
     [field: SerializeField]
     public SpriteRenderer spriteRenderer { get; private set; }
     
+<<<<<<< Updated upstream
     public BallFSM fsm;
 
+=======
+    [field: SerializeField]
+    public GameObject mesh { get; private set; }
+    [field: SerializeField]
+    public QuickOutline outlineScr { get; private set; }
+    
+    [field: SerializeField]
+    public CircleCollider2D goalColl { get; private set; }
+
+    public BallFSM fsm;
+
+    #region Gameplay Stats
+    
+    [NonSerialized]
+    public int damage;
+    [SerializeField]
+    public float ON_BALL_HIT_DECREASE_SPEED = 8;
+
+    #endregion
+
+>>>>>>> Stashed changes
 
     // -------------------------------------------
     // ! Bounciness Related
@@ -37,6 +60,26 @@ public class Ball : MonoBehaviour
     #endregion
 
 
+<<<<<<< Updated upstream
+=======
+        rb.linearVelocity = Vector2.zero;
+        fsm.DirtySwitch(fsm.stage1);
+        spriteRenderer.gameObject.SetActive(true);
+        damage = STAGE1_DAMAGE;
+
+        goalColl.enabled = true;
+        mesh.SetActive(true);
+        outlineScr.OutlineColor = stage1Color;
+
+        // ? --- Ricopia stateEnter poiche' chiamare lo stateEnter
+        // ? --- richiamerebbe l'evento associato, non lo vogliamo
+        spriteRenderer.color = Color.gray;   
+        rb.gravityScale = STAGE1_GRAVITY_SCALE;
+        rb.sharedMaterial = hardBounciness;
+
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+>>>>>>> Stashed changes
 
     // -------------------------------------------
     // ! Stage1 
@@ -256,15 +299,17 @@ public class Ball : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.layer 
-            == LayerMask.NameToLayer("LevelCollider"))
-        {
+    //     if(collision.gameObject.layer 
+    //         == LayerMask.NameToLayer("LevelCollider"))
+    //     {
 
-            //TODOStartImpactFrames();
-            fsm._currentState.OnCollisionEnter2D(fsm, collision);
-            wallBouncesSinceReset++; 
-        }    
+    //         //TODOStartImpactFrames();
+    //         fsm._currentState.OnCollisionEnter2D(fsm, collision);
+    //         wallBouncesSinceReset++; 
+    //     }    
+        fsm._currentState.OnCollisionEnter2D(fsm, collision);
     }
+
 
 
     #region UNUSED
