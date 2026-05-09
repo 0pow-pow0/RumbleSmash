@@ -32,7 +32,8 @@ public class Ball : MonoBehaviour
     
     [NonSerialized]
     public int damage;
-
+    [field: SerializeField]
+    public float ON_BALL_HIT_DECREASE_SPEED { get; private set; }
     #endregion
 
 
@@ -41,6 +42,7 @@ public class Ball : MonoBehaviour
     // -------------------------------------------
     #region PhysicsRelated
     public bool isMovementStopped { get; private set; } = false;
+    
 
     [field: Header("Bounciness Related"), SerializeField] 
     public PhysicsMaterial2D endlessBounciness;

@@ -312,7 +312,7 @@ namespace HierarchyDecorator
         /// <returns>Returns a bool based on if a valid component is found or not.</returns>
         public bool TryGetComponent(Type type, out ComponentType component)
         {
-            if (hasCached && lookup.TryGetValue(type, out component))
+                if (hasCached && lookup.TryGetValue(type, out component))
             {
                 return true;
             }

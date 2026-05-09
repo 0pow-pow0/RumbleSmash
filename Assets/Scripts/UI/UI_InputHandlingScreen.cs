@@ -60,7 +60,7 @@ public class UI_InputHandlingScreen : MonoBehaviour
         SetInitialState();
     }
 
-    void SetInitialState()
+    public void SetInitialState()
     {
         textPlayer1.gameObject.SetActive(true);
         textPlayer2.gameObject.SetActive(false);
