@@ -3,6 +3,7 @@ using System.ComponentModel;
 using EditorAttributes;
 using UnityEngine;
 using UnityEngine.Events;
+using UtilityShit;
 
 public enum RoundState
 {
@@ -13,15 +14,19 @@ public enum RoundState
 }
 
 /// <summary>
-/// Il beaviour viene gestito dal matchManager
+/// L'update viene gestito dal match manager
+/// TODO: Sposta dentro MatchManager
 /// </summary>
 public class RoundManager : MonoBehaviour
 {
-    [Header("References"), SerializeField]
-    GameObject spawnpointPlayer1;
+    [field: Header("References"), SerializeField]
+    public GameObject spawnpointPlayer1 { get; private set; }
     
-    [SerializeField]
-    GameObject spawnpointPlayer2;
+    [field: SerializeField]
+    public GameObject spawnpointPlayer2 { get; private set; }
+    
+    [field: SerializeField]
+    public GameObject spawnpointBall { get; private set; }
 
     #region START_ROUND
     [Header("Start Round Vars"), SerializeField]
@@ -42,14 +47,17 @@ public class RoundManager : MonoBehaviour
     /// Quando il round inizia ma 
     /// i player non possono muoversi
     /// </summary>
-    UnityEvent onRoundStartCountdown = new();
+    [NonSerialized]
+    public UnityEvent<float> onRoundStartCountdown = new();
 
     /// <summary>
     /// Inizio vero e proprio del round
     /// </summary>
-    UnityEvent onRoundStartBegin = new();
+    [NonSerialized]
+    public UnityEvent onRoundStartBegin = new();
 
-    UnityEvent onRoundEnd = new();
+    [NonSerialized]
+    public UnityEvent onRoundEnd = new();
 
 
     void Awake()
@@ -62,33 +70,43 @@ public class RoundManager : MonoBehaviour
     public void RoundStart()
     {
         roundState = RoundState.START;
-        Debug.Log("RoundManager: Round started");
-        GameManager.Get().player1.
-            plrInp.DeactivateInput();
-        
-        GameManager.Get().player2.
-            plrInp.DeactivateInput();
+        PowUtility.Log("RoundManager: Round countdown", Color.cyan);
+        InputManagerLogic.Get().DeactivateAllPlayerMap();
 
-        
+        GameManager g = GameManager.Get();
 
-        onRoundStartCountdown.Invoke();
+        g.player1.transform.position = 
+            spawnpointPlayer1.transform.position;
+        g.player1.Reset();
+        g.player2.transform.position =
+            spawnpointPlayer2.transform.position;
+        g.player2.Reset();
+        g.ball.transform.position =
+            spawnpointBall.transform.position;
+        g.ball.Reset();
+        
+        // ? --- E' qui e non si trova nel codice del goal
+        // ? --- per questioni di flow, mi cacavo
+        g.player1Goal.SetRoundBeginState();
+        g.player2Goal.SetRoundBeginState();
+
+    
+        Time.timeScale = 1f;
+
+        onRoundStartCountdown.Invoke(START_ROUND_COUNTDOWN_DURATION);
 
         PowUtilityU.Get().DelayAction
         (
-            () =>
+            (() =>
             {
-                GameManager.Get().player1.
-                    plrInp.ActivateInput();
-            
-                GameManager.Get().player2.
-                    plrInp.ActivateInput();
-
+                roundState = RoundState.MID;
+                
+                InputManagerLogic.Get().ActivateAllInputs();
 
                 onRoundStartBegin.Invoke();
-                Debug.Log("RoundManager: Round begin!");
+                PowUtility.Log("RoundManager: Round begin!", Color.cyan);
 
-                roundState = RoundState.MID;
-            },
+            }),
             START_ROUND_COUNTDOWN_DURATION
         );
 
@@ -106,10 +124,7 @@ public class RoundManager : MonoBehaviour
         g.player1Goal.goalColl.SetCollider(false);
         g.player2Goal.goalColl.SetCollider(false);
 
-        g.ball.goalColl.enabled = false;
-
         onRoundEnd.Invoke();
-
         PowUtilityU.Get().DelayAction(
             RoundStart, END_ROUND_DELAY_RESTART);
     }
