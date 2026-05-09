@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityEngine.Events;
@@ -26,9 +25,6 @@ public class Ball : MonoBehaviour
     public GameObject mesh { get; private set; }
     [field: SerializeField]
     public QuickOutline outlineScr { get; private set; }
-    
-    [field: SerializeField]
-    public CircleCollider2D goalColl { get; private set; }
 
     public BallFSM fsm;
 
@@ -36,8 +32,6 @@ public class Ball : MonoBehaviour
     
     [NonSerialized]
     public int damage;
-    [SerializeField]
-    public float ON_BALL_HIT_DECREASE_SPEED = 8;
 
     #endregion
 
@@ -52,16 +46,23 @@ public class Ball : MonoBehaviour
     public PhysicsMaterial2D endlessBounciness;
     public PhysicsMaterial2D veryHardBounciness;
     public PhysicsMaterial2D hardBounciness;
+
+
     #endregion
 
+    /// <summary>
+    /// Resetta completamente la palla, la sua fisica, il suo behaviour,
+    /// portandola ad uno stato simile a quello di "inizio play della scena"  
+    /// </summary>
     public void Reset()
     {
+        StopAllCoroutines();
+
         rb.linearVelocity = Vector2.zero;
         fsm.DirtySwitch(fsm.stage1);
         spriteRenderer.gameObject.SetActive(true);
         damage = STAGE1_DAMAGE;
 
-        goalColl.enabled = true;
         mesh.SetActive(true);
         outlineScr.OutlineColor = stage1Color;
 
@@ -78,7 +79,17 @@ public class Ball : MonoBehaviour
     // ! Stage1 
     // -------------------------------------------
     #region Stage1
-    [field: Header("Stage Vars"), SerializeField] 
+    [field: Header("Stage 1 Stats"), SerializeField] 
+    public Color stage1Color { get; private set; }
+    
+    [field: SerializeField]
+    public Color impactFrameColor { get; private set; }
+
+
+    [field: SerializeField]
+    public int STAGE1_DAMAGE { get; private set; }
+
+    [field: SerializeField]
     public float STAGE1_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
     public float STAGE1_GRAVITY_SCALE { get; private set; }
@@ -91,7 +102,11 @@ public class Ball : MonoBehaviour
     // -------------------------------------------
     #region Stage2
     // ? --- Per andare allo stage 2
-    [field: Space(10), SerializeField]
+    [field: Header("Stage 2 Stats"), Space(10), SerializeField]
+    public Color stage2Color { get; private set; }
+    [field: SerializeField]
+    public int STAGE2_DAMAGE { get; private set; }
+    [field: SerializeField]
     public float STAGE2_MIN_MAGNITUDE { get; private set; }
     
     [field: SerializeField]
@@ -113,7 +128,12 @@ public class Ball : MonoBehaviour
     // ! Stage3 
     // -------------------------------------------
     #region Stage3
-    [field: Space(10), SerializeField]
+    [field: Header("Stage 3 Stats"), Space(10), SerializeField]
+    public Color stage3Color { get; private set; }
+    [field: SerializeField]
+    public int STAGE3_DAMAGE { get; private set; }
+
+    [field: SerializeField]
     public float STAGE3_MIN_MAGNITUDE { get; private set; }
     [field: SerializeField]
     public float STAGE3_MAX_MAGNITUDE { get; private set; }
@@ -169,6 +189,10 @@ public class Ball : MonoBehaviour
 
     [NonSerialized]
     public UnityEvent onImpactFrameStart = new UnityEvent();
+    [NonSerialized]
+    public UnityEvent onImpactFrameEnd = new UnityEvent();
+    [NonSerialized]
+    public UnityEvent onBallScore = new UnityEvent();
     #endregion
 
     #region PhyisicsRelatedMethods
@@ -218,19 +242,22 @@ public class Ball : MonoBehaviour
             // ? --- dalla coroutine, la palla potrebbe bloccarsi
             // ? --- con dei FRAME DI RITARDO a causa deli update
             // ? --- indipendenti del Physics System.
-            StartCoroutine(ImpactFramesRoutine(46));
+            StartCoroutine(ImpactFramesRoutine(framesToWait));
         }
     }
 
     IEnumerator ImpactFramesRoutine(int framesToWait)
     {
         StopBallMovement();
-
+        onImpactFrameStart.Invoke();
+        Color preaviousColor = outlineScr.OutlineColor;
+        outlineScr.OutlineColor = impactFrameColor;
         for(int i = 0; i < framesToWait; i++)
         {
             yield return null;
         }
-
+        outlineScr.OutlineColor = preaviousColor;
+        onImpactFrameEnd.Invoke();
         StartBallMovement();
     }
 
@@ -263,12 +290,28 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         fsm = new BallFSM();
-        fsm.Awake();
+        fsm.Setup(this);
+
+        onBallScore.AddListener(
+            () =>
+            {
+                spriteRenderer.gameObject.SetActive(false);
+                mesh.SetActive(false);
+                
+            }
+        );
+    }
+
+    private void Start()
+    {
+        outlineScr.OutlineColor = stage1Color;
+        damage = STAGE1_DAMAGE;
     }
 
 
     public void Update()
     {
+        Debug.Log(fsm._currentState);
         ballStage = fsm._currentState._d_stateName;
 
         if(rb.linearVelocity.magnitude <= 
@@ -280,29 +323,21 @@ public class Ball : MonoBehaviour
 
         magnitude = rb.linearVelocity.magnitude;
 
-        if(Keyboard.current.oKey.wasPressedThisFrame)
-        {
-            StartImpactFrames(5); 
-            Debug.Log("Impact frame");  
-        }
-
         //if(impactFr)
         fsm.Update();
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-    //     if(collision.gameObject.layer 
-    //         == LayerMask.NameToLayer("LevelCollider"))
-    //     {
+        if(collision.gameObject.layer 
+            == LayerMask.NameToLayer("LevelCollider"))
+        {
 
-    //         //TODOStartImpactFrames();
-    //         fsm._currentState.OnCollisionEnter2D(fsm, collision);
-    //         wallBouncesSinceReset++; 
-    //     }    
-        fsm._currentState.OnCollisionEnter2D(fsm, collision);
+            //TODOStartImpactFrames();
+            fsm._currentState.OnCollisionEnter2D(fsm, collision);
+            wallBouncesSinceReset++; 
+        }    
     }
-
 
 
     #region UNUSED
