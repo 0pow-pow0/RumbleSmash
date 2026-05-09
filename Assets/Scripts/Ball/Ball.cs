@@ -22,10 +22,6 @@ public class Ball : MonoBehaviour
     [field: SerializeField]
     public SpriteRenderer spriteRenderer { get; private set; }
     
-<<<<<<< Updated upstream
-    public BallFSM fsm;
-
-=======
     [field: SerializeField]
     public GameObject mesh { get; private set; }
     [field: SerializeField]
@@ -45,7 +41,6 @@ public class Ball : MonoBehaviour
 
     #endregion
 
->>>>>>> Stashed changes
 
     // -------------------------------------------
     // ! Bounciness Related
@@ -59,9 +54,8 @@ public class Ball : MonoBehaviour
     public PhysicsMaterial2D hardBounciness;
     #endregion
 
-
-<<<<<<< Updated upstream
-=======
+    public void Reset()
+    {
         rb.linearVelocity = Vector2.zero;
         fsm.DirtySwitch(fsm.stage1);
         spriteRenderer.gameObject.SetActive(true);
@@ -79,7 +73,6 @@ public class Ball : MonoBehaviour
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
->>>>>>> Stashed changes
 
     // -------------------------------------------
     // ! Stage1 

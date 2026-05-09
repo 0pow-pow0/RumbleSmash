@@ -72,14 +72,10 @@ public class Player : MonoBehaviour
                 FindAction("Move").ReadValue<Vector2>();
 
             //moveInput.ReadValue<Vector2>();
-        Debug.Log("ASD: " + moveInput.ReadValue<Vector2>());
+        //Debug.Log("ASD: " + moveInput.ReadValue<Vector2>());
+        
         if(!canMove)
-            return;
-<<<<<<< Updated upstream
-=======
-        } 
-
-
+            return; 
 
         // -------------------------------------------
         // ! Movement events
@@ -118,7 +114,6 @@ public class Player : MonoBehaviour
 
 
 
->>>>>>> Stashed changes
 
         if(movementInputValue == Vector2.zero)
         {

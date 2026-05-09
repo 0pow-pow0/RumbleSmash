@@ -96,9 +96,6 @@ public class RoundManager : MonoBehaviour
 
     public void RoundEnd()
     {
-<<<<<<< Updated upstream
-        roundState = RoundState.MID;
-=======
         roundState = RoundState.END;
         //InputManagerLogic.Get().DeactivateAllInputs();
         
@@ -111,7 +108,6 @@ public class RoundManager : MonoBehaviour
 
         g.ball.goalColl.enabled = false;
 
->>>>>>> Stashed changes
         onRoundEnd.Invoke();
 
         PowUtilityU.Get().DelayAction(

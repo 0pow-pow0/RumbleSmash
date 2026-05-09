@@ -81,10 +81,6 @@ public class InputManagerLogic : MonoBehaviour
 
     void Update()
     {
-<<<<<<< Updated upstream
-        
-=======
->>>>>>> Stashed changes
     }
 
 

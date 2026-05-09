@@ -15,8 +15,6 @@ public class UI_InputHandlingScreen : MonoBehaviour
 
     void Start()
     {
-<<<<<<< Updated upstream
-=======
         MatchManager.Get().onPreMatchAssignDevices.AddListener
         (
             () =>
@@ -41,7 +39,6 @@ public class UI_InputHandlingScreen : MonoBehaviour
             }  
         );
 
->>>>>>> Stashed changes
         InputManagerLogic.Get().onPlayer1Joined
         .AddListener
         (
