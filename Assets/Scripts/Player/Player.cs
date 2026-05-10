@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     [field: SerializeField] 
     public Rigidbody2D rb { get; private set; }
     [field: SerializeField] 
-    public BoxCollider2D coll { get; private set; }
+    public BoxCollider2D bodyColl { get; private set; }
     [field: SerializeField]
     public GameObject meshScalePivot { get; private set; }
 
@@ -39,7 +39,7 @@ public class Player : MonoBehaviour
     public GameObject pivotArrowRotation { get; private set; }
     [field: SerializeField]
     public GameObject pivotSpriteColl { get; private set; }
-
+    
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
 
@@ -50,6 +50,10 @@ public class Player : MonoBehaviour
     // ! --------------------------------------------
     #region Gameplay Stats
     [Header("Gameplay Stats")]
+    /// <summary>
+    /// Se sto saltando posso oltrepassare le ghostPlatforms
+    /// </summary>
+    [SerializeField] public bool canPassGhostPlatforms;
     [SerializeField] public float SPEED;
     [SerializeField] public float FALL_SPEED;
     [SerializeField] public float FALL_SPEED_ON_INPUT;
@@ -253,6 +257,30 @@ public class Player : MonoBehaviour
         rb.gravityScale = FALL_SPEED;
     }
 
+    public void GhostPlatformsLogic()
+    {
+        if(canPassGhostPlatforms)
+        {
+            if(rb.linearVelocityY > 0)
+            {
+                // ? --- Ha priorita' su includeLayers
+                // ? --- dunque non servono check aggiuntivi
+                bodyColl.excludeLayers =
+                    bodyColl.excludeLayers |
+                    LayerMask.GetMask("GhostPlatform");
+            }
+            else
+            {
+                // ? --- Semplice bitwise per mantenere
+                // ? --- gli exlcudeLayers origianli, 
+                // ? --- staccando pero' solo GhostPlatform
+                bodyColl.excludeLayers =
+                    bodyColl.excludeLayers &
+                    ~LayerMask.GetMask("GhostPlatform");
+            }
+        }
+    }
+
     public void EnableMovement()
     {
         canMove = true;
@@ -348,11 +376,11 @@ public class Player : MonoBehaviour
         if(inputDirection.x > 0)
         {
             isFacingRight = true;
-            coll.gameObject.transform.localScale = 
+            bodyColl.gameObject.transform.localScale = 
                 new Vector3(
-                    Mathf.Abs(coll.transform.localScale.x),
-                    coll.transform.localScale.y,
-                    coll.transform.localScale.z
+                    Mathf.Abs(bodyColl.transform.localScale.x),
+                    bodyColl.transform.localScale.y,
+                    bodyColl.transform.localScale.z
                 );
             meshScalePivot.transform.localScale =
                 new Vector3(
@@ -363,11 +391,11 @@ public class Player : MonoBehaviour
         else if(inputDirection.x < 0)
         {
             isFacingRight = false;
-            coll.gameObject.transform.localScale = 
+            bodyColl.gameObject.transform.localScale = 
                 new Vector3( 
-                    -Mathf.Abs(coll.transform.localScale.x),
-                    coll.transform.localScale.y,
-                    coll.transform.localScale.z
+                    -Mathf.Abs(bodyColl.transform.localScale.x),
+                    bodyColl.transform.localScale.y,
+                    bodyColl.transform.localScale.z
                 );
 
             meshScalePivot.transform.localScale =
@@ -410,6 +438,20 @@ public class Player : MonoBehaviour
             pj.doppioScattoPerforming)
         {
             DisableMovement();
+
+            float deacreaseLinVelX =
+                Mathf.Lerp
+                (
+                    rb.linearVelocityX,
+                    0f,
+                    STOP_SPEED
+                );
+
+            rb.linearVelocity = new Vector2
+            (
+                rb.linearVelocity.y,
+                deacreaseLinVelX
+            );
         }
         //else if((pj.firstJumpPerforming || pj.doppioScattoPerforming))
         //{
@@ -420,6 +462,7 @@ public class Player : MonoBehaviour
             EnableMovement();
             AdjustSpriteBasedOnDirection();
             AdjustRotationBasedColliders(); 
+            GhostPlatformsLogic();
         }
         
         // ? --- Se no, quando si disabilita' il movimento

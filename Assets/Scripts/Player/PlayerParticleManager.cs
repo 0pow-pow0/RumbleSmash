@@ -78,11 +78,11 @@ public class PlayerParticleManager : MonoBehaviour
                     runStartSprite.transform.position = 
                     new Vector2
                     (
-                        plr.coll.bounds.center.x -
+                        plr.bodyColl.bounds.center.x -
                         runStartSprite.bounds.extents.x, 
 
-                        plr.coll.bounds.center.y -
-                        plr.coll.bounds.extents.y +
+                        plr.bodyColl.bounds.center.y -
+                        plr.bodyColl.bounds.extents.y +
                         runStartSprite.bounds.extents.y
                     );
                     
@@ -93,12 +93,12 @@ public class PlayerParticleManager : MonoBehaviour
                     runStartSprite.transform.position = 
                     new Vector2
                     (
-                        plr.coll.bounds.center.x +
-                        plr.coll.bounds.extents.x +
+                        plr.bodyColl.bounds.center.x +
+                        plr.bodyColl.bounds.extents.x +
                         runStartSprite.bounds.extents.x,
 
-                        plr.coll.bounds.center.y - 
-                        plr.coll.bounds.extents.y +
+                        plr.bodyColl.bounds.center.y - 
+                        plr.bodyColl.bounds.extents.y +
                         runStartSprite.bounds.extents.y
                     );
                 
@@ -124,12 +124,12 @@ public class PlayerParticleManager : MonoBehaviour
                     runEndSprite.transform.position = 
                         new Vector2
                         (
-                            plr.coll.bounds.center.x +
-                            plr.coll.bounds.extents.x +
+                            plr.bodyColl.bounds.center.x +
+                            plr.bodyColl.bounds.extents.x +
                             runEndSprite.sprite.bounds.extents.x, 
 
-                            plr.coll.bounds.center.y -
-                            plr.coll.bounds.extents.y +
+                            plr.bodyColl.bounds.center.y -
+                            plr.bodyColl.bounds.extents.y +
                             runEndSprite.sprite.bounds.extents.y 
                         );                    
                 }
@@ -139,12 +139,12 @@ public class PlayerParticleManager : MonoBehaviour
                     runEndSprite.transform.position = 
                     new Vector2
                     (
-                        plr.coll.bounds.center.x -
-                        plr.coll.bounds.extents.x - 
+                        plr.bodyColl.bounds.center.x -
+                        plr.bodyColl.bounds.extents.x - 
                         runEndSprite.sprite.bounds.extents.x,
                         
-                        plr.coll.bounds.center.y - 
-                        plr.coll.bounds.extents.y +
+                        plr.bodyColl.bounds.center.y - 
+                        plr.bodyColl.bounds.extents.y +
                         runEndSprite.sprite.bounds.extents.y
                     );
                 
@@ -158,10 +158,10 @@ public class PlayerParticleManager : MonoBehaviour
             {
                 
                 jumpStartSprite.transform.position = new Vector2(
-                    plr.coll.bounds.center.x,
+                    plr.bodyColl.bounds.center.x,
 
-                    plr.coll.bounds.center.y -
-                    plr.coll.bounds.extents.y +
+                    plr.bodyColl.bounds.center.y -
+                    plr.bodyColl.bounds.extents.y +
                     jumpStartSprite.bounds.extents.y
                     
                 );
@@ -176,10 +176,10 @@ public class PlayerParticleManager : MonoBehaviour
             {
                 jumpLandSprite.transform.position = new Vector2
                 (
-                    plr.coll.bounds.center.x,
+                    plr.bodyColl.bounds.center.x,
 
-                    plr.coll.bounds.center.y -
-                    plr.coll.bounds.extents.y +
+                    plr.bodyColl.bounds.center.y -
+                    plr.bodyColl.bounds.extents.y +
                     jumpLandSprite.bounds.extents.y / 2
                 );
                 playerEffects.SetTrigger("JumpLandTrigger");
@@ -252,7 +252,7 @@ public class PlayerParticleManager : MonoBehaviour
                 
                 chargeStart.gameObject.SetActive(true);
                 chargeStart.transform.localRotation = Quaternion.identity;
-                chargeStartSprite.color = Color.white;
+                chargeStartSprite.color = Color.black;
 
                 // ? --- Un po' troppe coroutine
 

@@ -13,7 +13,15 @@ public class PlayerGroundCheck : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
+        int res = 
+            LayerMask.GetMask
+            (
+                LayerMask.LayerToName(
+                    collision.gameObject.layer)
+            ) & 
+            LayerMask.GetMask("LevelCollider", "GhostPlatform");
+        
+        if(res != 0)
         {
             plr.isOnGround = true;  
             // ? --- Altrimenti se dovesse mai capitare di
@@ -30,14 +38,30 @@ public class PlayerGroundCheck : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("LevelCollider"))
+        int res = 
+            LayerMask.GetMask
+            (
+                LayerMask.LayerToName(
+                    collision.gameObject.layer)
+            ) & 
+            LayerMask.GetMask("LevelCollider", "GhostPlatform");
+        
+        if(res != 0)
         {
             plr.isOnGround = false; 
         }        
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("LevelCollider")
+        int res = 
+            LayerMask.GetMask
+            (
+                LayerMask.LayerToName(
+                    other.gameObject.layer)
+            ) & 
+            LayerMask.GetMask("LevelCollider", "GhostPlatform");
+        
+        if(res != 0
             &&
             // ? --- Resetta solo non stiamo saltando
             plr.rb.linearVelocity.y <= 0)

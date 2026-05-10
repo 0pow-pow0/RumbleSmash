@@ -17,7 +17,9 @@ public class Ball : MonoBehaviour
 
     //[field: SerializeField] 
     //public PhysicsMaterial2D rbMat { get; private set; }
-    
+    [field: SerializeField]
+    public CircleCollider2D physicsColl { get; private set; }
+
     [field: SerializeField]
     public SpriteRenderer spriteRenderer { get; private set; }
     
@@ -65,6 +67,11 @@ public class Ball : MonoBehaviour
         spriteRenderer.gameObject.SetActive(true);
         damage = STAGE1_DAMAGE;
 
+        // ? --- Attiva ghostPlatform
+        physicsColl.excludeLayers = 
+            physicsColl.excludeLayers &
+            ~LayerMask.GetMask("GhostPlatform");
+            
         mesh.SetActive(true);
         outlineScr.OutlineColor = stage1Color;
 

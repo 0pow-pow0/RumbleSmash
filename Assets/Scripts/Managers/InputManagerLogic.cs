@@ -164,7 +164,7 @@ public class InputManagerLogic : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(manager.playerCount);
+        
     }
 
 

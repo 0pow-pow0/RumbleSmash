@@ -75,7 +75,7 @@ public class UIInGame : MonoBehaviour
         
         if(g.player2 == null)
         {
-            player2Father.SetActive(false);
+            player2Father?.SetActive(false);
             return;
         }
 

@@ -8,6 +8,8 @@ public class CameraEffects : MonoBehaviour
     {
         GameManager g = GameManager.Get();
 
+        if(g.player1Goal == null)
+            return;
         // -------------------------------------------
         // ! Goal
         // -------------------------------------------

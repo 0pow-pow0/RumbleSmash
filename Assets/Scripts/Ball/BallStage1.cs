@@ -27,6 +27,11 @@ public class BallStage1 : FSMBaseState<BallFSM>
 
         bl.damage = bl.STAGE1_DAMAGE;
 
+        // ? --- Includi ghostPlatform
+        bl.physicsColl.excludeLayers = 
+            bl.physicsColl.excludeLayers &
+            ~LayerMask.GetMask("GhostPlatform");
+
         bl.onBallStage1Start.Invoke();
     }
 
