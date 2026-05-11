@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -34,6 +33,10 @@ public class Ball : MonoBehaviour
     
     [NonSerialized]
     public int damage;
+
+    /// <summary>
+    /// Potrei valutare di ridurre in percentuale la velocita'
+    /// </summary>
     [field: SerializeField]
     public float ON_BALL_HIT_DECREASE_SPEED { get; private set; }
     #endregion
@@ -320,7 +323,6 @@ public class Ball : MonoBehaviour
 
     public void Update()
     {
-        Debug.Log(fsm._currentState);
         ballStage = fsm._currentState._d_stateName;
 
         if(rb.linearVelocity.magnitude <= 

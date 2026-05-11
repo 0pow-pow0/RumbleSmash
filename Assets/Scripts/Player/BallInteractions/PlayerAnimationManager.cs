@@ -7,12 +7,13 @@ public class PlayerAnimationManager : MonoBehaviour
 
 
     // ? --- Preso dalla mesh stesa
-    [SerializeField]
     Animator anim;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        anim = plr.activeMesh.GetComponent<Animator>();
+        Debug.Log(anim);
         plr.onPlayerMoveStart.AddListener(
             () =>
             {

@@ -20,7 +20,6 @@ public class AwaitState : BaseState
     {
         if(p.pbi.kickInput.WasPressedThisFrame())
         {
-            Debug.Log("premuto");
             p.SwitchState(p.kickState);
         }
     }

@@ -35,7 +35,6 @@ public class UIRoundAnimations : MonoBehaviour
                 // ? --- +0.99 per non mostrare lo 0 e non arrotondare al
                 // ? --- numero successivo
                 int roundedTime = (int)(duration - passedTime + 0.99f);
-                Debug.Log("RoundedTime: " + roundedTime);
                 textRoundCountdown.text = "" + roundedTime;
             },
             (float passedTime) =>

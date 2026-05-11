@@ -203,6 +203,10 @@ public class PlayerJump : MonoBehaviour
 
                 plr.moveInput.Disable();
 
+                // ? --- Passa attraverso
+                plr.bodyColl.excludeLayers =
+                    plr.bodyColl.excludeLayers |
+                    LayerMask.GetMask("GhostPlatform");
 
                 doppioScattoDirection = doppioScattoValue;
                 onDoppioScattoStart.Invoke();
@@ -275,11 +279,17 @@ public class PlayerJump : MonoBehaviour
                 //{
                 //    plr.EnableMovement();
                 //}
-                onDoppioScattoEnd.Invoke();
+                
+                // ? --- Non passare attraverso ghostplatform
+                plr.bodyColl.excludeLayers = 
+                    plr.bodyColl.excludeLayers &
+                    ~LayerMask.GetMask("GhostPlatform");
+
                 plr.rb.linearVelocity = Vector2.zero;
                 plr.rb.gravityScale = 1f;
                 plr.moveInput.Enable();
                 doppioScattoDirection = Vector2.zero;
+                onDoppioScattoEnd.Invoke();
             }
         }
     }

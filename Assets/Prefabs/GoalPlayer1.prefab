@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: eef8304bbcc36fd4da1de5efa952e9a6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.38679236, g: 1, b: 0.43317172, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -234,6 +234,8 @@ MonoBehaviour:
   <movementPivots>k__BackingField:
   - {fileID: 0}
   - {fileID: 0}
+  shieldFullColor: {r: 0.41862813, g: 1, b: 0.40099996, a: 1}
+  shieldBrokenColor: {r: 1, g: 0.3, b: 0.4171569, a: 1}
   <stats>k__BackingField: {fileID: 11400000, guid: 96bcb776f557c7f40b95b546b1a045fe, type: 2}
   isInvulnerable: 0
   playerNumber: 1

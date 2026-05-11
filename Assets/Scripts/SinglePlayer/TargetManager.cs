@@ -1,4 +1,4 @@
-using UnityEngine;
+ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.ProBuilder;
@@ -182,39 +182,43 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-    IEnumerator CheckIfDestroyedRoutine()
+    float checkDestroyTimer = 0f;
+    void CheckIfDestroyedTimed()
     {
-        while(true)
+        checkDestroyTimer += Time.deltaTime;
+        if(checkDestroyTimer <= 1f)
         {
-                
+            return;
+        }
+        else
+        {
+            checkDestroyTimer = 0f;
+        }
+
+        List<Target> toRemove = new();
+        foreach(Target tar in spawnedTargets)
+        {
+            if(tar == null)
+            {
+                toRemove.Add(tar);
+            }
+            if(tar.hasBeenTakenByPlayer)
+            {
+                toRemove.Add(tar);
+            }
+        }
+
+        foreach(Target tarToRem in toRemove)
+        {
+            destroyedTargets++;
+            GameManager.Get().player1
+                .GetComponent<PlayerSPVars>()
+                .AddPoints(tarToRem.pointsValue);
             
-            yield return new WaitForSeconds(0.4f);
-
-            List<Target> toRemove = new();
-            foreach(Target tar in spawnedTargets)
-            {
-                if(tar == null)
-                {
-                    toRemove.Add(tar);
-                }
-                if(tar.hasBeenTakenByPlayer)
-                {
-                    toRemove.Add(tar);
-                }
-            }
-
-            foreach(Target tarToRem in toRemove)
-            {
-                destroyedTargets++;
-                GameManager.Get().player1
-                    .GetComponent<PlayerSPVars>()
-                    .AddPoints(tarToRem.pointsValue);
-                
-                onTargetDestroy.Invoke(tarToRem);
-                spawnedTargets.Remove(tarToRem);
-                if(tarToRem != null)
-                Destroy(tarToRem.gameObject);       
-            }
+            onTargetDestroy.Invoke(tarToRem);
+            spawnedTargets.Remove(tarToRem);
+            if(tarToRem != null)
+            Destroy(tarToRem.gameObject, 0.5f);       
         }
     }
     /// <summary>
@@ -277,13 +281,14 @@ public class TargetManager : MonoBehaviour
     void Start()
     {
         SetSpawnTime();
-        StartCoroutine(CheckIfDestroyedRoutine());
+        //StartCoroutine(CheckIfDestroyedRoutine());
     }
 
     void Update()
     {
         passedSpawnTime += Time.deltaTime;
         CheckSpawn();
+        CheckIfDestroyedTimed();
     }
 
 
@@ -291,7 +296,7 @@ public class TargetManager : MonoBehaviour
     // ! Singleton shit
     // -------------------------------------------
     private static TargetManager inst;
-
+ 
     public static TargetManager Get()
     {
         if(inst == null)

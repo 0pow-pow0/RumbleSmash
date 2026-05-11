@@ -3,9 +3,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using EditorAttributes;
-using UnityEngine.AI;
-using UnityEditor.Rendering;
-using NUnit.Framework;
 using Unity.VisualScripting;
 
 
@@ -43,8 +40,40 @@ public class Player : MonoBehaviour
     [field: SerializeField] 
     public PlayerBallCollider ballCollider { get; private set; }
 
-    [field: NonSerialized] 
+    [field: SerializeField] 
     public PlayerInput plrInp { get; private set; }
+
+    [field: SerializeField]
+    public GameObject player1Mesh;
+    [field: SerializeField]
+    public GameObject player2Mesh;
+
+    [field: NonSerialized]
+    public GameObject activeMesh { get; private set; }
+
+    void SetMesh()
+    {
+        switch(plrNumber)
+        {
+            case PlayerNumber.PLAYER_1:
+            player1Mesh.SetActive(true);
+            activeMesh = player1Mesh;
+            player2Mesh.SetActive(false);
+            break;
+
+            case PlayerNumber.PLAYER_2:
+            player1Mesh.SetActive(false);
+            player2Mesh.SetActive(true);
+            activeMesh = player2Mesh;
+            break;
+
+            default:
+            Debug.Log("Player not set");
+            player1Mesh.SetActive(true);
+            player2Mesh.SetActive(false);
+            break;
+        }
+    }
     
 
     // ! --------------------------------------------
@@ -181,7 +210,6 @@ public class Player : MonoBehaviour
                 MOVEMENT_STEER_FRAME_LENGTH_TOLLERANCE
             && !hasEnded)
         {
-            Debug.Log("TriggeredAnimation!");
             onPlayerMoveEnd.Invoke();
             hasEnded = true;
             hasStarted = false;
@@ -269,7 +297,8 @@ public class Player : MonoBehaviour
                     bodyColl.excludeLayers |
                     LayerMask.GetMask("GhostPlatform");
             }
-            else
+            else if (rb.linearVelocityY < 0 
+                && !pj.doppioScattoPerforming)
             {
                 // ? --- Semplice bitwise per mantenere
                 // ? --- gli exlcudeLayers origianli, 
@@ -415,7 +444,7 @@ public class Player : MonoBehaviour
     {
         canMove = true;
 
-        plrInp = GetComponent<PlayerInput>();
+        SetMesh();
     } 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -424,6 +453,7 @@ public class Player : MonoBehaviour
         jumpInput = plrInp.actions.FindAction("Jump");
 
         rb.gravityScale = FALL_SPEED;
+
     }
 
     void Update()
@@ -446,11 +476,12 @@ public class Player : MonoBehaviour
                     0f,
                     STOP_SPEED
                 );
+            
 
             rb.linearVelocity = new Vector2
             (
-                rb.linearVelocity.y,
-                deacreaseLinVelX
+                deacreaseLinVelX,
+                rb.linearVelocityY
             );
         }
         //else if((pj.firstJumpPerforming || pj.doppioScattoPerforming))
@@ -462,9 +493,9 @@ public class Player : MonoBehaviour
             EnableMovement();
             AdjustSpriteBasedOnDirection();
             AdjustRotationBasedColliders(); 
-            GhostPlatformsLogic();
         }
         
+        GhostPlatformsLogic();
         // ? --- Se no, quando si disabilita' il movimento
         // ? --- continua a traslare all'infinito poiche'
         // ? --- non viene resettata la velocita' lineare.

@@ -247,10 +247,10 @@ public class MatchManager : MonoBehaviour
             RoundManager.Get().RoundUpdate();
         }
 
-        if(Keyboard.current.mKey.wasPressedThisFrame)
-        {
-            ScorePlayer1(1);
-        }
+        // if(Keyboard.current.mKey.wasPressedThisFrame)
+        // {
+        //     ScorePlayer1(1);
+        // }
     }
 
 

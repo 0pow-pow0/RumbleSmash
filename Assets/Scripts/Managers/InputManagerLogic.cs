@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +11,6 @@ using UtilityShit;
 public class InputManagerLogic : MonoBehaviour
 {
     PlayerInputManager manager;
-
     
     [NonSerialized]
     public UnityEvent onPlayer1Joined = new();
@@ -57,17 +57,21 @@ public class InputManagerLogic : MonoBehaviour
 
         else if (GameManager.Get().player2 == null)
         {
+            Debug.Log(GameManager.Get());
+            Debug.Log(player.gameObject.GetComponent<Player>());
             GameManager.Get().SetPlayer2( 
                 player.gameObject.GetComponent<Player>()
             );            
-
+            
+            Debug.Log(GameManager.Get().player2.plrInp);
             GameManager.Get().player2.plrInp.
                 DeactivateInput();
             
             Player p = player.gameObject.GetComponent<Player>();
             p.plrNumber = PlayerNumber.PLAYER_2;
 
-            PowUtility.Log("Player 2 joined!", Color.yellow);
+            PowUtility.Log("Player 2 joined!" + " " + p.plrNumber, 
+                Color.yellow);
             onPlayer2Joined.Invoke();
         }
     }

@@ -1,7 +1,4 @@
-using System;
 using DG.Tweening;
-using Unity.VisualScripting;
-using UnityEditor.Build;
 using UnityEngine;
 
 public class PlayerParticleManager : MonoBehaviour

@@ -41,10 +41,31 @@ public class UIInGame : MonoBehaviour
         MatchManager.Get().onMatchBegin.AddListener(
             () =>
             {
+                player1Father.SetActive(false);
+                player2Father.SetActive(false);
+            }
+        );
+
+        MatchManager.Get().onPreMatchShowRivals.AddListener
+        (
+            (duration) =>
+            {
+                SetupAll();
+            }
+        );
+        RoundManager.Get().onRoundStartCountdown.AddListener
+        (
+            (duration) =>
+            {
                 player1Father.SetActive(true);
                 player2Father.SetActive(true);
             }
         );
+    }
+
+    void SetupAll()
+    {
+
 
         // MatchManager.Get().onPreMatchAssignDevices.AddListener
         // (

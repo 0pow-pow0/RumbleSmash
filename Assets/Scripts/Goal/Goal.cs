@@ -17,6 +17,11 @@ public class Goal : MonoBehaviour
 
     #region Gameplay Vars
     [field: Header("Gameplay Vars"), SerializeField]
+    Color shieldFullColor;
+    [SerializeField]
+    Color shieldBrokenColor;
+
+    [field: SerializeField]
     public GoalGameplayStats stats { get; private set; }
     public int shieldHP { get; private set; }
     public void RemoveShieldHP(int toRemove)
@@ -51,7 +56,7 @@ public class Goal : MonoBehaviour
         if(shieldHP <= 0 )
         {
             shieldHP = 0;
-            
+            sprite.color = shieldBrokenColor;
             shieldColl.SetCollider(false);
             goalColl.SetCollider(true);
             PowUtility.Log("Destroyed", Color.red);
@@ -83,6 +88,8 @@ public class Goal : MonoBehaviour
     {
         goalColl.SetCollider(false);
         shieldColl.SetCollider(true);
+
+        sprite.color = shieldFullColor;
 
         shieldHP = stats.START_SHIELD_HP;
     }
@@ -132,7 +139,7 @@ public class Goal : MonoBehaviour
         (
             transform.position, 
             movementPivots[activePivot].transform.position,
-            0.005f
+            1f * Time.deltaTime
         );
 
         transform.position = lerpRes;
