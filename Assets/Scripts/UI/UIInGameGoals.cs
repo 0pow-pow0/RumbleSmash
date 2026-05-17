@@ -6,25 +6,25 @@ using UnityEngine.UI;
 
 public class UIInGameGoals : MonoBehaviour
 {
-    [Header("References Goal 1"), SerializeField]
-    private Slider player1GoalHPSlider;
+    [field: Header("References Goal 1"), SerializeField]
+    public Slider player1GoalHPSlider { get; private set; } 
 
-    [Header("References Goal 2"), SerializeField]
-    private Slider player2GoalHPSlider;
+    [field: Header("References Goal 2"), SerializeField]
+    public Slider player2GoalHPSlider { get; private set; } 
 
     void Awake()
     {
         player1GoalHPSlider.gameObject.SetActive(false);
         player2GoalHPSlider.gameObject.SetActive(false);
     }
-    void Start()
+    public  void Start()
     {
         GameManager g = GameManager.Get();
 
         if(g.player1Goal == null)
             return;
 
-        MatchManager.Get().onPreMatchShowRivals.AddListener
+        MatchManager.Get()?.onPreMatchShowRivals.AddListener
         (
             (dur) =>
             {
@@ -33,7 +33,7 @@ public class UIInGameGoals : MonoBehaviour
             }
         );
 
-        MatchManager.Get().onMatchBegin.AddListener
+        MatchManager.Get()?.onMatchBegin.AddListener
         (
             () =>
             {
@@ -42,7 +42,7 @@ public class UIInGameGoals : MonoBehaviour
             }
         );
 
-        RoundManager.Get().onRoundStartCountdown.AddListener
+        RoundManager.Get()?.onRoundStartCountdown.AddListener
         (
             (countdownDur) =>
             {
@@ -73,10 +73,6 @@ public class UIInGameGoals : MonoBehaviour
                 if(normalizedHealth < 0)
                     normalizedHealth = 0;
 
-                Debug.Log(normalizedHealth + 
-                " " + g.player2Goal.stats.START_SHIELD_HP 
-                + " " + g.player2Goal.shieldHP);
-                
                 DOTween.To
                 (
                     () => player1GoalHPSlider.value, 

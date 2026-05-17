@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa58f2378b10a44e8a8008dc3b5e4de, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  state: 0
+  speakerName: Sal
+  speakerIcon: {fileID: 21300000, guid: 88e7ebcbbce99cb40956d4e4efe2d739, type: 3}
+  sentences:
+  - Ciao io sono Salvo Michele Sorrentino, in arte Sal Da Vinci.
+  - Ora spogliati...
+  dialoguePrefab: {fileID: 6382298188097560065, guid: 81ccea20632d5184db32a87520b52564, type: 3}
+  parent: {fileID: 0}

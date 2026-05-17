@@ -124,13 +124,13 @@ public class Goal : MonoBehaviour
     {
         if(playerNumber == PlayerNumber.PLAYER_1)
         {
-            MatchManager.Get().ScorePlayer2(1);
-            GameManager.Get().ball.onBallScore.Invoke();
+            MatchManager.Get()?.ScorePlayer2(1);
+            GameManager.Get()?.ball.onBallScore.Invoke();
         }
         else if (playerNumber == PlayerNumber.PLAYER_2)
         {
-            MatchManager.Get().ScorePlayer1(1);
-            GameManager.Get().ball.onBallScore.Invoke();
+            MatchManager.Get()?.ScorePlayer1(1);
+            GameManager.Get()?.ball.onBallScore.Invoke();
         }
     }
     void Update()

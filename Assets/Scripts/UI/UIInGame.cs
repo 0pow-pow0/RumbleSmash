@@ -8,11 +8,14 @@ using UnityEngine.UI;
 
 public class UIInGame : MonoBehaviour
 {
-    [Header("References player 1"), SerializeField]
-    private GameObject player1Father;
+    [field: SerializeField]
+    public GameObject father { get; private set; } 
+
+    [field: Header("References player 1"), SerializeField]
+    public GameObject player1Father { get; private set; } 
 
     [SerializeField]
-    private GameObject player1IconFather;
+    GameObject player1IconFather;
     [SerializeField]
     private Image player1Image;
     [SerializeField]
@@ -38,7 +41,7 @@ public class UIInGame : MonoBehaviour
         player1Father.SetActive(false);
         player2Father.SetActive(false);
 
-        MatchManager.Get().onMatchBegin.AddListener(
+        MatchManager.Get()?.onMatchBegin?.AddListener(
             () =>
             {
                 player1Father.SetActive(false);
@@ -46,14 +49,14 @@ public class UIInGame : MonoBehaviour
             }
         );
 
-        MatchManager.Get().onPreMatchShowRivals.AddListener
+        MatchManager.Get()?.onPreMatchShowRivals.AddListener
         (
             (duration) =>
             {
                 SetupAll();
             }
         );
-        RoundManager.Get().onRoundStartCountdown.AddListener
+        RoundManager.Get()?.onRoundStartCountdown.AddListener
         (
             (duration) =>
             {

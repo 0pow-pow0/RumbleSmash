@@ -13,7 +13,6 @@ public class PlayerAnimationManager : MonoBehaviour
     void Start()
     {
         anim = plr.activeMesh.GetComponent<Animator>();
-        Debug.Log(anim);
         plr.onPlayerMoveStart.AddListener(
             () =>
             {

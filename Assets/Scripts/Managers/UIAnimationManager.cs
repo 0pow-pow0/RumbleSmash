@@ -182,4 +182,9 @@ public class UIAnimationManager : MonoBehaviour
             inst = this;
         }
     }
+
+    void Awake()
+    {
+        InitSingleton();
+    }
 }

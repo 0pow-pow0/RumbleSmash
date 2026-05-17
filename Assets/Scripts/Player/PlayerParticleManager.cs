@@ -163,8 +163,8 @@ public class PlayerParticleManager : MonoBehaviour
                     
                 );
                 
-
-                playerEffects.SetTrigger("JumpStartTrigger");
+                //if(playerEffects.GetNextAnimatorStateInfo(1).IsName(). > 1f)
+                 playerEffects.SetTrigger("JumpStartTrigger");
             }
         );
 

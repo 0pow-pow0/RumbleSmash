@@ -19,7 +19,7 @@ public class CameraEffects : MonoBehaviour
                 transform.DOShakePosition(0.5f ,0.03f);
             }
         );    
-        g.player2Goal.onShieldDestroy.AddListener(
+        g.player2Goal?.onShieldDestroy.AddListener(
             () =>
             {
                 transform.DOShakePosition(0.5f ,0.03f);

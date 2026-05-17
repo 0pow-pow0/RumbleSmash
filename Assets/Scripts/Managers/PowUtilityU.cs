@@ -24,7 +24,6 @@ public class PowUtilityU : MonoBehaviour
         action.Invoke();
     }
 
-
     /// <summary>
     /// 
     /// </summary>

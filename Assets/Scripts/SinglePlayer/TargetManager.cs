@@ -115,7 +115,6 @@ public class TargetManager : MonoBehaviour
                  " on box perimeter");
         }
         
-        Debug.Log("Rand: " + result);
         return (result, normalTowardsCenterScreen);
     }
 
