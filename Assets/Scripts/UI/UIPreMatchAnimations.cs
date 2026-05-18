@@ -1,9 +1,15 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class UIPreMatchAnimations : MonoBehaviour
 {
     [Header("References"), SerializeField]
     GameObject father;
+
+    [SerializeField]
+    GameObject player1Img;
+    [SerializeField]
+    GameObject player2Img;
 
     void SetInitialState()
     {
@@ -30,6 +36,7 @@ public class UIPreMatchAnimations : MonoBehaviour
                     () =>
                     {
                         SetInitialState();
+
                     },
                     dur);
             }

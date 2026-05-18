@@ -13,6 +13,7 @@ public class UIInputManagerSingleplayer : MonoBehaviour
         (
             () =>
             {
+                Debug.Log("Chimaato");
                 father.SetActive(false);
             }
         );

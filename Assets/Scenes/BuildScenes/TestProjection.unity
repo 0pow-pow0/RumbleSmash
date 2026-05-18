@@ -781,8 +781,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2412daa457155e14c989e0e08cfbd8e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1GoalHPSlider: {fileID: 1567257971}
-  player2GoalHPSlider: {fileID: 2108545111}
+  <player1GoalHPSlider>k__BackingField: {fileID: 0}
+  <player2GoalHPSlider>k__BackingField: {fileID: 0}
 --- !u!1 &180739302
 GameObject:
   m_ObjectHideFlags: 0
@@ -1752,7 +1752,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &298052281
 Transform:
   m_ObjectHideFlags: 0
@@ -2682,7 +2682,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66ab008e8a67bfc4788f1794fa9020f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Father: {fileID: 798809400}
+  <father>k__BackingField: {fileID: 0}
+  <player1Father>k__BackingField: {fileID: 0}
   player1IconFather: {fileID: 90755117}
   player1Image: {fileID: 1410953391}
   player1DoppioScattoSlider: {fileID: 533864865}
@@ -11919,7 +11920,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1979557165
 MonoBehaviour:
   m_ObjectHideFlags: 0

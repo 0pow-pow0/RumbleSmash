@@ -5,12 +5,12 @@ public class UIMainMenu : MonoBehaviour
 {
     public void SingleplayerButton()
     {
-        SceneManager.LoadScene("Singleplayer");
+        PowSceneManager.Get().ChangeScene("Singleplayer");
     }
 
     public void MultiplayerButton()
     {
-        SceneManager.LoadScene("Multiplayer");
+        PowSceneManager.Get().ChangeScene("Multiplayer");
     }
 
     public void QuitButton()

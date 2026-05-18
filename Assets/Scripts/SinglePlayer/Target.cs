@@ -56,7 +56,7 @@ public class Target : MonoBehaviour
     void OnDestroy()
     {
         sprite.DOKill();
-        spriteOutline.DOKill();
+        spriteOutline.DOKill();     
     }
     // Update is called once per frame
     void Update()

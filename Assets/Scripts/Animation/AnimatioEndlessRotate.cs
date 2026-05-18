@@ -20,4 +20,9 @@ public class AnimationEndlessRotate : MonoBehaviour
     {
         
     }
+
+    void OnDestroy()
+    {
+        transform.DOKill(); 
+    }
 }

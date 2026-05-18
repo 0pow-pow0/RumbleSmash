@@ -159,28 +159,6 @@ public class TargetManager : MonoBehaviour
         }
     }
 
-    void CheckIfDestroyed()
-    {
-        List<Target> toRemove = new();
-        foreach(Target tar in spawnedTargets)
-        {
-            if(tar == null)
-            {
-                toRemove.Add(tar);
-            }
-            if(tar.hasBeenTakenByPlayer)
-            {
-                toRemove.Add(tar);
-            }
-        }
-
-        foreach(Target tarToRem in toRemove)
-        {
-            spawnedTargets.Remove(tarToRem);
-            Destroy(tarToRem.gameObject);       
-        }
-    }
-
     float checkDestroyTimer = 0f;
     void CheckIfDestroyedTimed()
     {
@@ -209,10 +187,10 @@ public class TargetManager : MonoBehaviour
 
         foreach(Target tarToRem in toRemove)
         {
-            destroyedTargets++;
-            GameManager.Get().player1
-                .GetComponent<PlayerSPVars>()
-                .AddPoints(tarToRem.pointsValue);
+            // destroyedTargets++;
+            // GameManager.Get().player1
+            //     .GetComponent<PlayerSPVars>()
+            //     .AddPoints(tarToRem.pointsValue);
             
             onTargetDestroy.Invoke(tarToRem);
             spawnedTargets.Remove(tarToRem);

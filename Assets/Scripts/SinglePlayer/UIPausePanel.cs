@@ -52,6 +52,7 @@ public class UIPausePanel : MonoBehaviour
     public void ExitButton()
     {
         //TODO
+        DeactivatePanel();
         SceneManager.LoadScene("MainMenu");
     }
 }

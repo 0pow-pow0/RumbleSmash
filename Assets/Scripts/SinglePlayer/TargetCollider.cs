@@ -28,6 +28,8 @@ public class TargetCollider : MonoBehaviour
                     tar.transform.DOScale(1f, 0.15f);
                 }
             );
+
+            GameManager.Get().player1.GetComponent<PlayerSPVars>().AddPoints(tar.pointsValue);
         }
     }
 }
