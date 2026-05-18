@@ -48,12 +48,12 @@ public class ColpisciMission : Eventable
 
         if(plr.plrInp.currentControlScheme == "Gamepad")
         {
-            inputText = "Premi J per colpire la palla";
+            inputText = "Premi RT/R2 per colpire la palla";
             qst.StartQuest(inputText + " " + "0/" + minColpiPallaToEnd);
         }
         else if(plr.plrInp.currentControlScheme == "Keyboard&Mouse")
         {
-            inputText = "Premi X/O per colpire la palla";
+            inputText = "Premi J per colpire la palla";
             qst.StartQuest(inputText + " " + "0/" + minColpiPallaToEnd);
         }
         else

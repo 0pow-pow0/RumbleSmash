@@ -250,7 +250,7 @@ GameObject:
   - component: {fileID: 2951922818048732474}
   - component: {fileID: 5698320335789491842}
   - component: {fileID: 1534124756409180728}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: ShieldCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

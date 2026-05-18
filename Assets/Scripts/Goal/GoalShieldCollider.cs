@@ -24,6 +24,7 @@ public class GoalShieldCollider : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other) 
     {
+        Debug.Log(other.collider.name);
         if(other.gameObject.layer == LayerMask.NameToLayer("Ball"))
         {
             goal.RemoveShieldHP(GameManager.Get().ball.damage);

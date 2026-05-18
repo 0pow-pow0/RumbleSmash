@@ -1,9 +1,4 @@
-using System.Linq.Expressions;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 [CreateAssetMenu(
 fileName = "Dialogue", 

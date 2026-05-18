@@ -23,6 +23,26 @@ public class PowUtilityU : MonoBehaviour
         yield return new WaitForSeconds(timeToWait);
         action.Invoke();
     }
+    public void DelayActionForFrames(
+        Action action,
+        int framesToWait)
+    {
+        StartCoroutine(
+            DelayActionRoutine(action, framesToWait));
+    }
+    private IEnumerator DelayActionForFramesRoutine(
+        Action action,
+        int framesToWait)
+    {
+        int framesWaited = 0;
+    
+        while(framesWaited <= framesToWait)
+        {
+            framesWaited++;
+            yield return null;
+        }
+        action.Invoke();
+    }
 
     /// <summary>
     /// 

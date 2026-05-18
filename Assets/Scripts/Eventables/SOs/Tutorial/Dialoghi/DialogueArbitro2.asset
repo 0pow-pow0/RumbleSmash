@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 4
   speakerName: Allenatore
-  speakerIcon: {fileID: 21300000, guid: 88e7ebcbbce99cb40956d4e4efe2d739, type: 3}
+  speakerIcon: {fileID: 21300000, guid: d8089a233f050bd44bc53e803904a7cb, type: 3}
   <MAX_CHAR_COUNTER>k__BackingField: 160
   sentences:
   - content: Le sai usare le gambe quindi, ALLORA PERCHE' NON SALTI?

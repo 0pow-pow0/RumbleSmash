@@ -1,9 +1,4 @@
-using System.Linq.Expressions;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 [CreateAssetMenu(
 fileName = "Dialogue", 
@@ -43,12 +38,12 @@ public class DoppioScattoMission : Eventable
 
         if(plr.plrInp.currentControlScheme == "Gamepad")
         {
-            inputText = "Premi spazio dopo salto per fare un doppioScatto";
+            inputText = "Premi A/X dopo un salto per fare un doppioScatto";
             qst.StartQuest(inputText + " " + "0/" + minDoppioScattoToEnd);
         }
         else if(plr.plrInp.currentControlScheme == "Keyboard&Mouse")
         {
-            inputText = "Premi A/X dopo un salto per fare un doppioScatto";
+            inputText = "Premi spazio dopo un salto per fare un doppioScatto";
             qst.StartQuest(inputText + " " + "0/" + minDoppioScattoToEnd);
         }
         else

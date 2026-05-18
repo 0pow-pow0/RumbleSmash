@@ -1,8 +1,5 @@
-using System.Linq.Expressions;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
+
 [CreateAssetMenu(
 fileName = "Dialogue", 
 menuName = "ScriptableObject/Eventables/Missions/MuovitiMission")]
@@ -40,7 +37,7 @@ public class MuovitiMission : Eventable
 
         if(plr.plrInp.currentControlScheme == "Gamepad")
         {
-            inputText = "Usa le freccette per muoverti";
+            inputText = "Usa il DPad per muoverti";
             qst.StartQuest(inputText + " 0%");
         }
         else if(plr.plrInp.currentControlScheme == "Keyboard&Mouse")

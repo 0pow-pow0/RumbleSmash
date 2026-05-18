@@ -40,12 +40,12 @@ public class CaricaColpoMission : Eventable
 
         if(plr.plrInp.currentControlScheme == "Gamepad")
         {
-            inputText = "Tieni premuto J per caricare il colpo";
+            inputText = "Tieni premuto RT/R2 per caricare il colpo";
             qst.StartQuest(inputText + " " + "0/" + minColpiCaricatiPallaToEnd);
         }
         else if(plr.plrInp.currentControlScheme == "Keyboard&Mouse")
         {
-            inputText = "Tieni premuto X/O per caricare il colpo";
+            inputText = "Tieni premuto J per caricare il colpo";
             qst.StartQuest(inputText + " " + "0/" + minColpiCaricatiPallaToEnd);
         }
         else
@@ -54,9 +54,10 @@ public class CaricaColpoMission : Eventable
             qst.StartQuest(inputText + " " + "0/" + minColpiCaricatiPallaToEnd);
         }
 
-        plr.pbi.onKickEnd.AddListener(OnKickEndListener);
-        plr.pbi.onChargeEnd.AddListener(() => hasChargedAttack = true);
 
+        plr.pbi.onKickStart.AddListener(() => hasChargedAttack = false);
+        plr.pbi.onChargeEnd.AddListener(() => hasChargedAttack = true);
+        plr.pbi.onBallHit.AddListener(OnBallHitListener);
         hasChargedAttack = false;
 
         startPosition = plr.transform.position;
@@ -65,6 +66,10 @@ public class CaricaColpoMission : Eventable
 
     void OnKickEndListener()
     {
+    }
+
+    void OnBallHitListener(Vector2 hitPos)
+    {        
         if(hasChargedAttack)
         {
             madeColpiCaricatiPalla++;

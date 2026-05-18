@@ -18,6 +18,9 @@ public class Ball : MonoBehaviour
     //public PhysicsMaterial2D rbMat { get; private set; }
     [field: SerializeField]
     public CircleCollider2D physicsColl { get; private set; }
+    
+    [field: SerializeField]
+    public CircleCollider2D goalColl { get; private set; } 
 
     [field: SerializeField]
     public SpriteRenderer spriteRenderer { get; private set; }
@@ -83,6 +86,13 @@ public class Ball : MonoBehaviour
         spriteRenderer.color = Color.gray;   
         rb.gravityScale = STAGE1_GRAVITY_SCALE;
         rb.sharedMaterial = hardBounciness;
+
+        goalColl.enabled = true;
+
+        physicsColl.excludeLayers =
+            physicsColl.excludeLayers &
+            ~LayerMask.GetMask("Goal");
+
 
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
@@ -309,7 +319,10 @@ public class Ball : MonoBehaviour
             {
                 spriteRenderer.gameObject.SetActive(false);
                 mesh.SetActive(false);
-                
+                goalColl.gameObject.SetActive(false);
+                physicsColl.excludeLayers =
+                physicsColl.excludeLayers |
+                    LayerMask.GetMask("Goal");
             }
         );
     }
