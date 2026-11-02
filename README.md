@@ -1,3 +1,3 @@
 # Rumble Smash
 
-[Banner](Banner.png)
+![Banner](Banner.png)
