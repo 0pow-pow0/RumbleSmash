@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!29 &1
+OcclusionCullingSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_OcclusionBakeSettings:
+    smallestOccluder: 5
+    smallestHole: 0.25
+    backfaceThreshold: 100
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
+--- !u!104 &2
+RenderSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 10
+  m_Fog: 0
+  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogMode: 3
+  m_FogDensity: 0.01
+  m_LinearFogStart: 0
+  m_LinearFogEnd: 300
+  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
+  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientIntensity: 1
+  m_AmbientMode: 0
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_HaloStrength: 0.5
+  m_FlareStrength: 1
+  m_FlareFadeSpeed: 3
+  m_HaloTexture: {fileID: 0}
+  m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
+  m_DefaultReflectionMode: 0
+  m_DefaultReflectionResolution: 128
+  m_ReflectionBounces: 1
+  m_ReflectionIntensity: 1
+  m_CustomReflection: {fileID: 0}
+  m_Sun: {fileID: 0}
+  m_UseRadianceAmbientProbe: 0
+--- !u!157 &3
+LightmapSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
+  m_GISettings:
+    serializedVersion: 2
+    m_BounceScale: 1
+    m_IndirectOutputScale: 1
+    m_AlbedoBoost: 1
+    m_EnvironmentLightingMode: 0
+    m_EnableBakedLightmaps: 1
+    m_EnableRealtimeLightmaps: 0
+  m_LightmapEditorSettings:
+    serializedVersion: 12
+    m_Resolution: 2
+    m_BakeResolution: 40
+    m_AtlasSize: 1024
+    m_AO: 0
+    m_AOMaxDistance: 1
+    m_CompAOExponent: 1
+    m_CompAOExponentDirect: 0
+    m_ExtractAmbientOcclusion: 0
+    m_Padding: 2
+    m_LightmapParameters: {fileID: 0}
+    m_LightmapsBakeMode: 1
+    m_TextureCompression: 1
+    m_ReflectionCompression: 2
+    m_MixedBakeMode: 2
+    m_BakeBackend: 1
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 512
+    m_PVRBounces: 2
+    m_PVREnvironmentSampleCount: 256
+    m_PVREnvironmentReferencePointCount: 2048
+    m_PVRFilteringMode: 1
+    m_PVRDenoiserTypeDirect: 1
+    m_PVRDenoiserTypeIndirect: 1
+    m_PVRDenoiserTypeAO: 1
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
+    m_PVREnvironmentMIS: 1
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 1
+    m_PVRFilteringGaussRadiusAO: 1
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ExportTrainingData: 0
+    m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
+  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
+  m_LightingSettings: {fileID: 0}
+--- !u!196 &4
+NavMeshSettings:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_BuildSettings:
+    serializedVersion: 3
+    agentTypeID: 0
+    agentRadius: 0.5
+    agentHeight: 2
+    agentSlope: 45
+    agentClimb: 0.4
+    ledgeDropHeight: 0
+    maxJumpAcrossDistance: 0
+    minRegionArea: 2
+    manualCellSize: 0
+    cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
+    buildHeightMesh: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
+    debug:
+      m_Flags: 0
+  m_NavMeshData: {fileID: 0}
+--- !u!1 &1181706672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1181706673}
+  - component: {fileID: 1181706674}
+  m_Layer: 0
+  m_Name: Bootstrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1181706673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1181706672}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 4.52}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1181706674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1181706672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed7cf4058f86a0e46a787db64e86ebea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelWrapperName: = Level
+  player1Goal: {fileID: 5486034769229383208, guid: db398ceb7113a13428e6d5e1ff544b1d, type: 3}
+  player2Goal: {fileID: 4184939941765162095, guid: 62a16c4378258ce4d88ccad3b98d74eb, type: 3}
+  player1Pivots:
+  - {fileID: 3167249468695773358, guid: f8bff7ad6b36b6a469eae9ba1111ffef, type: 3}
+  - {fileID: 847886328295091043, guid: cc0cba5c2ac3fb743b704df3b7bef404, type: 3}
+  player2Pivots:
+  - {fileID: 2349707552969600182, guid: 6a8d7072ce5d9e347830a917c93a37d8, type: 3}
+  - {fileID: 1090166811137319323, guid: 6748972f4cd5ee145acd10c2daa8e310, type: 3}
+  spawnpointPlayer1: {fileID: 1617810395123891479, guid: 5a7a72f2f57a12248a9610d0facf932e, type: 3}
+  spawnpointPlayer2: {fileID: 9030216876102036990, guid: 6e234eb7b1588b644b38ae0b0c700309, type: 3}
+  spawnpointBall: {fileID: 6907906070680010375, guid: c426cecbbebda2143966ed5a7d71b824, type: 3}
+  mainCamera: {fileID: 8970526857900483339, guid: 70b445fabcdfe064b84367ab7d5e2e96, type: 3}
+  directionalLight: {fileID: 1329016621312139805, guid: 484fa4156aa299a4087b55deedee7e0f, type: 3}
+  arena: {fileID: 5806391496737715139, guid: 8f03ae1fef0fb1e409db4499e02f94db, type: 3}
+  platforms: {fileID: 3703536042672951138, guid: e483a9c95d657c340bb7873bb682162f, type: 3}
+  background: {fileID: 5821290861220829008, guid: 771bd4d3d26571e4e9ed08feb9b5e309, type: 3}
+  entitiesWrapperName: = Entities
+  ball: {fileID: 1789684388161565166, guid: 67f9619e36cbdbd44b36b9aab3ca0945, type: 3}
+  canvas: {fileID: 3173880142691808855, guid: d897532cb2d684649a150548a690249c, type: 3}
+  uiRoundAnimations: {fileID: 612039559306471067, guid: b7f7be6171a0003409fd1c662f55ec41, type: 3}
+  ui_InputHandlingScreen: {fileID: 5274399102266498728, guid: 4b499f2d3b50c8140b99e844a7d0c353, type: 3}
+  uiPausePanel: {fileID: 3319003436365388749, guid: 13e5f6f64cb45e74e867097c18dbe549, type: 3}
+  uiAnimationManager: {fileID: 3320576232937039107, guid: f4549552f0b33b14ea96077d6503956d, type: 3}
+  uiScoreBoard: {fileID: 4764076795998697023, guid: efa1187be671ce7488bda428d4d9131d, type: 3}
+  uiPreMatchAnimation: {fileID: 17198540215214614, guid: fa5684b5ddb84a34a8d372999ac269d6, type: 3}
+  uiMatchAnimations: {fileID: 7870034547207758314, guid: 322ee742c356e6544a44281e3863a898, type: 3}
+  uiInGame: {fileID: 674657446941454028, guid: 5692cb4b658743f4dbad66879bc23553, type: 3}
+  inputManager: {fileID: 3623633716644702121, guid: 575690e3acb90be479a254d14c657064, type: 3}
+  gameManager: {fileID: 6955082045021215208, guid: 68b6300eacc917d4d981e0bb4283675a, type: 3}
+  matchManager: {fileID: 7748805017929342772, guid: ec12b02e2a922214a8852ac552fab3a7, type: 3}
+  eventSystemPrefab: {fileID: 6301384932653125877, guid: 7b250df8b70082442b1ff8ce6c025efb, type: 3}
+  uiScreensManagerPowPrefab: {fileID: 8124924860637652186, guid: 199ad6c3a027b7f498b1384c6226d235, type: 3}
+  globalParticleManagerPow: {fileID: 5186310966494344544, guid: 3f2be43db32b70b4797e92722f8cdfa1, type: 3}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 1181706673}

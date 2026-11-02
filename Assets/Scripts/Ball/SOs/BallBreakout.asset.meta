@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: f1ea9a54c36005a42a0df2466bd5498e
+labels:
+- GameplayStats
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: scriplableobjects
+  assetBundleVariant: gameplaystats

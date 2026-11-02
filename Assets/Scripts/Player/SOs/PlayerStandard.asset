@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389c497e3cc82294696bf56f64cfe8a8, type: 3}
+  m_Name: PlayerStandard
+  m_EditorClassIdentifier: 
+  canPassGhostPlatforms: 1
+  SPEED: 3
+  FALL_SPEED: 1
+  FALL_SPEED_ON_INPUT: 4
+  STOP_SPEED: 0.2
+  <JUMP_FORCE>k__BackingField: 4
+  <DOPPIOSCATTO_FORCE>k__BackingField: 30
+  <DOPPIOSCATTO_FRAME_DURATION>k__BackingField: 4
+  <DOPPIOSCATTO_COOLDOWN_DURATION>k__BackingField: 1
+  <KICK_FORCE>k__BackingField: 2
+  <KICK_FORCE_CHARGED_MAX>k__BackingField: 5
+  <KICK_FORCE_PUSH>k__BackingField: 0
+  <TIME_TO_REACH_MAX_CHARGE>k__BackingField: 0.2
+  <CHARGE_WINDOW>k__BackingField: 0.2
+  <KICK_COLLIDER_FRAME_DURATION>k__BackingField: 30
